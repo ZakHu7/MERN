@@ -18,5 +18,8 @@
   },
   "devDependencies": {},
   "keywords": [],
-  "description": ""
+  "description": "",
+  "engines": {
+    "node": "10.16.0"
+  }
 }
