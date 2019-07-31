@@ -32,9 +32,11 @@ app.use(bodyParser.json());
 app.use(logger('dev'));
 
 
-/// Trying to laod from MS sql Database 
+/// Trying to load from MS sql Database 
 ///
 router.post('/initializeData', (req, res) => {
+  db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
+
   var sql = require("mssql");
 
     // config for your database
@@ -52,9 +54,9 @@ router.post('/initializeData', (req, res) => {
 
         // create Request object
         var request = new sql.Request();
-           
+        
         // query to the database and get the records
-        request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '19-000'", function (err, recordset) {
+        request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '19-200'", function (err, recordset) {
             var i = 0;
             recordset.recordsets[0].forEach(function (item) {
               let data = new Data();
@@ -65,8 +67,9 @@ router.post('/initializeData', (req, res) => {
               data.name = item.ProjectName;
               data.hours = item.ActualHours;
 
-              console.log(data);
+              //console.log(data);
               data.save();
+              
               // data.save((err) => {
               //   if (err) return res.json({ success: false, error: err });
               //   return res.json({ success: true });
