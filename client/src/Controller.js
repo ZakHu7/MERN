@@ -1,10 +1,25 @@
-// /client/App.js
+// /client/Controller.js
 import React, { Component } from 'react';
 import axios from 'axios';
+import logo from './logo.svg';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+import TableTest from './Table.js';
+
+import './Controller.css';
 
 //const API_PORT = process.env.PORT || 'localhost:3001';
 
-class App extends Component {
+class Controller extends Component {
   // initialize our state
   state = {
     data: [],
@@ -18,6 +33,17 @@ class App extends Component {
     objectToUpdate: null,
   };
 
+  useStyles = makeStyles(theme => ({
+    root: {
+      width: '100%',
+      marginTop: theme.spacing(3),
+      overflowX: 'auto',
+    },
+    table: {
+      minWidth: 650,
+    },
+  }));
+  
   // when component mounts, first thing it does is fetch all existing data in our db
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
@@ -46,7 +72,8 @@ class App extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb = () => {
-    fetch('http://192.168.23.114:3001/api/getData')
+    //fetch('http://192.168.23.114:3001/api/getData')
+    fetch('https://mighty-scrubland-43358.herokuapp.com/:3001/api/getData')
       .then((data) => data.json())
       .then((res) => this.setState({ data: res.data }));
   };
@@ -116,7 +143,7 @@ class App extends Component {
 
     axios.post('http://192.168.23.114:3001/api/initializeData', {
       id: idToBeAdded,
-      name: "bobs",
+      name: "test",
     });
   };
 
@@ -125,22 +152,35 @@ class App extends Component {
   // see them render into our screen
   render() {
     const { data } = this.state;
+    //const classes = useStyles();
+
     return (
       <div>
-        <ul>
-          {data.length <= 0
-            ? 'NO DB ENTRIES YET'
-            : data.map((dat) => (
-                <li style={{ padding: '10px' }} key={data.id}>
-                  <span style={{ color: 'gray' }}> id: </span> {dat.id} <br />
-                  <span style={{ color: 'gray' }}> projectID: </span> {dat.projectID} <br />
-                  <span style={{ color: 'gray' }}> name: </span> {dat.name} <br />
-                  <span style={{ color: 'gray' }}> hours: </span> {dat.hours} <br />
-
-                  
-                </li>
-              ))}
-        </ul>
+        <TableTest data={data}/>
+        {/* <Paper className="root">
+          <Table className="table">
+            <TableHead>
+              <TableRow>
+                <TableCell> Client ID </TableCell>
+                <TableCell align="right"> Project ID </TableCell>
+                <TableCell align="right"> Project Name </TableCell>
+                <TableCell align="right"> Hours </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.length <= 0
+              ? 'NO DB ENTRIES YET'
+              : data.map((dat) => (
+                  <TableRow key={dat.id}>
+                    <TableCell component="th" scope="row"> {dat.id} </TableCell>
+                    <TableCell align="right"> {dat.projectID} </TableCell>
+                    <TableCell align="right"> {dat.name} </TableCell>
+                    <TableCell align="right"> {dat.hours} </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </Paper> */}
         <div style={{ padding: '10px' }}>
           <input
             type="text"
@@ -184,17 +224,23 @@ class App extends Component {
             UPDATE
           </button>
 
-          <button
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() =>
               this.initializeData()
             }
           >
-            UPDATE
-          </button>
+            REFRESH DATA
+          </Button>
         </div>
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
       </div>
+
+
+
     );
   }
 }
 
-export default App;
+export default Controller;

@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const Data = require('./data');
 const credentials = require("./credentials/mongodb");
+var mssql = require("./db"); 
+
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -35,55 +37,39 @@ app.use(logger('dev'));
 /// Trying to load from MS sql Database 
 ///
 router.post('/initializeData', (req, res) => {
-  db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
+    db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
 
-  var sql = require("mssql");
 
-    // config for your database
-    var config = {
-        user: 'sa',
-        password: '()Test123?()',
-        server: '192.168.23.11', 
-        database: 'Rombald2018' 
-    };
+    var request = new mssql.Request();
+        
+    // query to the database and get the records
+    request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '19-200'", function (err, recordset) {
+        var i = 0;
+        recordset.recordsets[0].forEach(function (item) {
+          let data = new Data();
+          data.id = i++;
 
-    // connect to your database
-    sql.connect(config, function (err) {
-    
+          data.projectID = item.ProjectID.replace(':', '');
+          
+          data.name = item.ProjectName;
+          data.hours = item.ActualHours;
+
+          //console.log(data);
+          data.save();
+          
+          // data.save((err) => {
+          //   if (err) return res.json({ success: false, error: err });
+          //   return res.json({ success: true });
+          // });
+        })
+
         if (err) console.log(err);
 
-        // create Request object
-        var request = new sql.Request();
+
+
+        // // send records as a response
+        // res.send(recordset);
         
-        // query to the database and get the records
-        request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '19-200'", function (err, recordset) {
-            var i = 0;
-            recordset.recordsets[0].forEach(function (item) {
-              let data = new Data();
-              data.id = i++;
-
-              data.projectID = item.ProjectID.replace(':', '');
-              
-              data.name = item.ProjectName;
-              data.hours = item.ActualHours;
-
-              //console.log(data);
-              data.save();
-              
-              // data.save((err) => {
-              //   if (err) return res.json({ success: false, error: err });
-              //   return res.json({ success: true });
-              // });
-            })
-
-            if (err) console.log(err);
-
-
-
-            // // send records as a response
-            // res.send(recordset);
-            
-        });
     });
 
   // data.save((err) => {
