@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const API_PORT = process.env.PORT || 'localhost:3001';
+//const API_PORT = process.env.PORT || 'localhost:3001';
 
 class App extends Component {
   // initialize our state
