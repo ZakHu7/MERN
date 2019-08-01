@@ -43,7 +43,7 @@ router.post('/initializeData', (req, res) => {
     var request = new mssql.Request();
         
     // query to the database and get the records
-    request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '19-200'", function (err, recordset) {
+    request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
         var i = 0;
         recordset.recordsets[0].forEach(function (item) {
           let data = new Data();
@@ -83,7 +83,8 @@ router.post('/initializeData', (req, res) => {
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  Data.find((err, data) => {
+  var query = {hours: { $gt: 10 }};
+  Data.find(query, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });

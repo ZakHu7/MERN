@@ -6,14 +6,9 @@ import logo from './logo.svg';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
-import TableTest from './Table.js';
+import Table from './Table.js';
 
 import './Controller.css';
 
@@ -47,22 +42,22 @@ class Controller extends Component {
   // when component mounts, first thing it does is fetch all existing data in our db
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
-  // componentDidMount() {
-  //   this.getDataFromDb();
-  //   if (!this.state.intervalIsSet) {
-  //     let interval = setInterval(this.getDataFromDb, 1000);
-  //     this.setState({ intervalIsSet: interval });
-  //   }
-  // }
+  componentDidMount() {
+    this.getDataFromDb();
+    if (!this.state.intervalIsSet) {
+      let interval = setInterval(this.getDataFromDb, 1000);
+      this.setState({ intervalIsSet: interval });
+    }
+  }
 
   // never let a process live forever
   // always kill a process everytime we are done using it
-  // componentWillUnmount() {
-  //   if (this.state.intervalIsSet) {
-  //     clearInterval(this.state.intervalIsSet);
-  //     this.setState({ intervalIsSet: null });
-  //   }
-  // }
+  componentWillUnmount() {
+    if (this.state.intervalIsSet) {
+      clearInterval(this.state.intervalIsSet);
+      this.setState({ intervalIsSet: null });
+    }
+  }
 
   // just a note, here, in the front end, we use the id key of our data object
   // in order to identify which we want to Update or delete.
@@ -72,8 +67,7 @@ class Controller extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb = () => {
-    //fetch('http://192.168.23.114:3001/api/getData')
-    fetch('https://mighty-scrubland-43358.herokuapp.com/:3001/api/getData')
+    fetch('http://192.168.23.114:3001/api/getData')
       .then((data) => data.json())
       .then((res) => this.setState({ data: res.data }));
   };
@@ -156,32 +150,10 @@ class Controller extends Component {
 
     return (
       <div>
-        <TableTest data={data}/>
-        {/* <Paper className="root">
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell> Client ID </TableCell>
-                <TableCell align="right"> Project ID </TableCell>
-                <TableCell align="right"> Project Name </TableCell>
-                <TableCell align="right"> Hours </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.length <= 0
-              ? 'NO DB ENTRIES YET'
-              : data.map((dat) => (
-                  <TableRow key={dat.id}>
-                    <TableCell component="th" scope="row"> {dat.id} </TableCell>
-                    <TableCell align="right"> {dat.projectID} </TableCell>
-                    <TableCell align="right"> {dat.name} </TableCell>
-                    <TableCell align="right"> {dat.hours} </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </Paper> */}
-        <div style={{ padding: '10px' }}>
+        
+        <Table data={data}/>
+        {/* <Filters /> */}
+        {/* <div style={{ padding: '10px' }}>
           <input
             type="text"
             onChange={(e) => this.setState({ name: e.target.value })}
@@ -223,10 +195,11 @@ class Controller extends Component {
           >
             UPDATE
           </button>
-
+        </div> */}
+        <div>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={() =>
               this.initializeData()
             }
@@ -234,6 +207,7 @@ class Controller extends Component {
             REFRESH DATA
           </Button>
         </div>
+     
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
       </div>
 

@@ -65,10 +65,10 @@ function getSorting(order, orderBy) {
 }
 
 const headRows = [
-  { id: 'Client ID', numeric: true, disablePadding: true, label: 'Client ID' },
-  { id: 'Project ID', numeric: false, disablePadding: false, label: 'Project ID' },
-  { id: 'Project Name', numeric: false, disablePadding: false, label: 'Project Name' },
-  { id: 'Hours', numeric: true, disablePadding: false, label: 'Hours' },
+  { id: 'id', numeric: true, disablePadding: true, label: 'Client ID' },
+  { id: 'projectID', numeric: false, disablePadding: false, label: 'Project ID' },
+  { id: 'name', numeric: false, disablePadding: false, label: 'Project Name' },
+  { id: 'hours', numeric: true, disablePadding: false, label: 'Hours' },
 ];
 
 function EnhancedTableHead(props) {
@@ -85,7 +85,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
+            inputProps={{ 'aria-label': 'select all projects' }}
           />
         </TableCell>
         {headRows.map(row => (
@@ -167,7 +167,7 @@ const EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Nutrition
+            Table
           </Typography>
         )}
       </div>
@@ -226,7 +226,7 @@ const useStyles = makeStyles(theme => ({
 export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('projectID');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -318,7 +318,7 @@ export default function EnhancedTable(props) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.projectID}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
