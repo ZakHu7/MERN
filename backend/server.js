@@ -83,7 +83,10 @@ router.post('/initializeData', (req, res) => {
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  var query = {hours: { $gt: 10 }};
+  const query = {hours: { $gt: 10 }};
+  const { id, update } = req.body;
+  //console.log(req);
+  console.log(req.query.test);
   Data.find(query, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });

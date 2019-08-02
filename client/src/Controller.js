@@ -1,18 +1,17 @@
 // /client/Controller.js
 import React, { Component } from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
 
 import { makeStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 
 import Table from './Table.js';
 
 import './Controller.css';
 
 //const API_PORT = process.env.PORT || 'localhost:3001';
+
+const API = 'http://192.168.23.114:3001/api';
 
 class Controller extends Component {
   // initialize our state
@@ -67,9 +66,17 @@ class Controller extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb = () => {
-    fetch('http://192.168.23.114:3001/api/getData')
-      .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
+    // fetch(API + '/getData')
+    //   .then((data) => data.json())
+    //   .then((res) => this.setState({ data: res.data }));
+    axios.get(API + '/getData', {
+      params: {
+        test: 'test',
+      }
+    })
+      // .then((data) => data.json())
+      .then((res) => this.setState({ data: res.data.data }));
+      //alert(JSON.stringify(res.data.data)));
   };
 
   // our put method that uses our backend api

@@ -28,6 +28,8 @@ function Header() {
                 <Nav className="mr-auto">
                     <Nav.Link href="http://192.168.23.114:3000">Home</Nav.Link>
                     <Nav.Link href="http://192.168.23.117/dashboard">Dashboard</Nav.Link>
+                    <Nav.Link href="http://192.168.23.117:90/v1/">Quoting</Nav.Link>
+
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

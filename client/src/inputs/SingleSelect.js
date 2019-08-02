@@ -13,13 +13,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function SingleSelect() {
+function SingleSelect(props) {
     const classes = useStyles();
-    const [name, setName] = React.useState('');
+    const [title, setTitle] = React.useState('');
     const [open, setOpen] = React.useState(false);
   
     function handleChange(event) {
-      setName(event.target.value);
+      //setTitle(event.target.value);
+      props.onChange(event.target.value);
     }
   
     function handleClose() {
@@ -33,24 +34,28 @@ function SingleSelect() {
     return (
   
         <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="demo-controlled-open-select">Name</InputLabel>
+            <InputLabel htmlFor={props.title}>{props.title}</InputLabel>
             <Select
                 open={open}
                 onClose={handleClose}
                 onOpen={handleOpen}
-                value={name}
+                value={props.value}
                 onChange={handleChange}
                 inputProps={{
-                    name: 'age',
-                    id: 'demo-controlled-open-select',
+                    title: props.title,
+                    id: props.title,
                 }}
             >
                 <MenuItem value="">
                     <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
+                {props.items.map(item => (
+                    <MenuItem value={item}>{item}</MenuItem>
+
+                ))}
+                {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
             </Select>
         </FormControl>
   

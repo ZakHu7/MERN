@@ -33,26 +33,39 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
+function createFilter(name, setState) {
+    return { name, setState };
+  }
 
 export default function Home() {
     const classes = useStyles();
+    const [projectSize, setProjectSize] = React.useState('');
 
+    //TODO make this generic by passing in setState
+    function handleFilterChange(setState, size) {
+        setState(size);
+        //alert(size);
+        
+    }
 
     return (
         <div className={classes.root}>
+            
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <Filters />
+                        <Filters 
+                            projectSize={createFilter(projectSize, setProjectSize)}
+                            onChange={(setState, size) => handleFilterChange(setState, size)}/>
                         
                     </Paper>
                 </Grid>
-                
             </Grid>
             <Grid container spacing={2}>
                 <Grid item xs>
-                    <Paper className={classes.paper}>xs</Paper>
+                    <Paper className={classes.paper}>
+                        {projectSize}
+                    </Paper>
                 </Grid>
                 <Grid item xs={8}>
                     <Paper className={classes.paper}>

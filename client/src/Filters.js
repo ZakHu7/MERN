@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 
 import SingleSelect from './inputs/SingleSelect';
 import MultiSelect from './inputs/MultiSelect';
+import { getThemeProps } from '@material-ui/styles';
 
 
 
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function AutoGrid() {
+export default function Filters(props) {
     const classes = useStyles();
 
 
@@ -43,7 +44,12 @@ export default function AutoGrid() {
                 <FormControlR id="basic-url" aria-describedby="basic-addon3" />
             </InputGroup>
 
-            <SingleSelect />
+            <SingleSelect 
+                title={"Project Size"}
+                items={["Small", "Medium", "Large"]}
+                value={props.projectSize.name}
+                onChange={(size) => props.onChange(props.projectSize.setState, size)}
+            />
             <MultiSelect />
         </div>
     );
