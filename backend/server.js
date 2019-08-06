@@ -6,6 +6,7 @@ const logger = require('morgan');
 const Data = require('./data');
 const credentials = require("./credentials/mongodb");
 var mssql = require("./db"); 
+var makeQueries = require('./makequeries');
 
 
 //const API_PORT = process.env.PORT || 3001;
@@ -43,18 +44,20 @@ router.post('/initializeData', (req, res) => {
     var request = new mssql.Request();
         
     // query to the database and get the records
-    request.query("SELECT ProjectID, ProjectName, ActualHours FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
+    request.query("SELECT ProjectID, ProjectName, ActualHours, BuildingType, Area1 FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
         var i = 0;
         recordset.recordsets[0].forEach(function (item) {
           let data = new Data();
           data.id = i++;
 
           data.projectID = item.ProjectID.replace(':', '');
-          
           data.name = item.ProjectName;
           data.hours = item.ActualHours;
+          data.buildingType = item.BuildingType;
+          data.area = item.Area1 == null ? null : parseInt(item.Area1.replace(/\D/g,''));
 
-          //console.log(data);
+          //console.log(item.Area1);
+          //console.log(data.area);
           data.save();
           
           // data.save((err) => {
@@ -80,13 +83,43 @@ router.post('/initializeData', (req, res) => {
 ///
 
 
+// function getProjectSize(size) {
+//   if(size == "Small") {
+//     return [ 0, 90 ];
+//   } else if (size == "Medium") {
+//     return [ 90, 200 ];
+//   } else if (size == "Large") {
+//     return [ 200, 9999 ];
+//   } else {
+//     return [ 0, 9999 ];
+//   }
+// }
+
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  const query = {hours: { $gt: 10 }};
+  //console.log(req.query);
+
+  const [gt, lt] = makeQueries.getProjectSize(req.query.projectSize);
+  const buildingTypeQuery = makeQueries.getBuildingTypes(req.query.buildingTypes);
+
+  //console.log(buildingTypeQuery.length);
+
+  const query = {
+    hours: { $gt: gt, $lt: lt }
+    //$or: buildingTypeQuery
+    //$or: [ { buildingType: / /} ]
+  };
+
+  if (buildingTypeQuery.length != 0) {
+    query.$or = buildingTypeQuery;
+    //console.log(query.$or);
+
+  }
+  
   const { id, update } = req.body;
   //console.log(req);
-  console.log(req.query.test);
+  //console.log(req.query.projectSize);
   Data.find(query, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });

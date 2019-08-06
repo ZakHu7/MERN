@@ -2,19 +2,13 @@ import React from 'react';
 
 import Controller from './Controller';
 
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControlR from 'react-bootstrap/FormControl';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
+
 
 import Filters from './Filters';
+import Chart from './Chart';
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,19 +27,31 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function createFilter(name, setState) {
-    return { name, setState };
-  }
+function createFilterInfo(value, setState) {
+    return { value, setState };
+}
+
+function createQueryFilters(projectSize, buildingTypes) {
+    return { projectSize, buildingTypes };
+}
 
 export default function Home() {
     const classes = useStyles();
-    const [projectSize, setProjectSize] = React.useState('');
+    const [data, setData] = React.useState([]);
+    const [page, setPage] = React.useState(0);
 
-    //TODO make this generic by passing in setState
-    function handleFilterChange(setState, size) {
-        setState(size);
-        //alert(size);
-        
+    const [projectSize, setProjectSize] = React.useState('');
+    const [buildingTypes, setBuildingTypes] = React.useState([]);
+
+    //Changes page of the table
+    function handleStateChange(setState, value) {
+        setState(value);
+    }
+
+    //Generic filter change event
+    function handleFilterChange(setState, value) {
+        setState(value);
+        setPage(0);
     }
 
     return (
@@ -54,26 +60,45 @@ export default function Home() {
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <Filters 
-                            projectSize={createFilter(projectSize, setProjectSize)}
-                            onChange={(setState, size) => handleFilterChange(setState, size)}/>
+                        
                         
                     </Paper>
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
-                <Grid item xs>
+                {/* <Grid item xs>
                     <Paper className={classes.paper}>
                         {projectSize}
                     </Paper>
-                </Grid>
-                <Grid item xs={8}>
+                </Grid> */}
+                <Grid item xs={10}>
                     <Paper className={classes.paper}>
-                        <Controller />
+                        <Controller
+                            filters={createQueryFilters(projectSize, buildingTypes)}
+                            page={page}
+                            pageChange={(value) => handleStateChange(setPage, value)}
+                            data={data}
+                            dataChange={(value) => handleStateChange(setData, value)}
+                        />
                     </Paper>
                 </Grid>
-                <Grid item xs>
-                    <Paper className={classes.paper}>xs</Paper>
+                <Grid item xs={2}>
+                    <Paper className={classes.paper}>
+                        <Filters 
+                            projectSize={createFilterInfo(projectSize, setProjectSize)}
+                            buildingType={createFilterInfo(buildingTypes, setBuildingTypes)}
+                            onChange={(setState, value) => handleFilterChange(setState, value)}
+                        />
+                    </Paper>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+                <Grid item xs={6}>
+                    <Paper className={classes.paper}>
+                        <Chart
+                            data={data}
+                        />
+                    </Paper>
                 </Grid>
             </Grid>
         </div>

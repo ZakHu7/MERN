@@ -4,14 +4,9 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControlR from 'react-bootstrap/FormControl';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 
 import SingleSelect from './inputs/SingleSelect';
 import MultiSelect from './inputs/MultiSelect';
-import { getThemeProps } from '@material-ui/styles';
-
 
 
 
@@ -47,10 +42,20 @@ export default function Filters(props) {
             <SingleSelect 
                 title={"Project Size"}
                 items={["Small", "Medium", "Large"]}
-                value={props.projectSize.name}
+                value={props.projectSize.value}
                 onChange={(size) => props.onChange(props.projectSize.setState, size)}
             />
-            <MultiSelect />
+            <MultiSelect 
+                title={"Building Type"}
+                items={["Null", "Assembly", "Base Building", "Grocery",
+                        "Health Care Facility", "Industrial", 
+                        "Institutional", "Miscellaneous", 
+                        "Office", "Residential", "Restaurant", 
+                        "Retail", "Warehouse"]}
+                value={props.buildingType.value}
+                onChange={(buildings) => props.onChange(props.buildingType.setState, buildings)}
+
+            />
         </div>
     );
 }

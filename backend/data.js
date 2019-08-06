@@ -9,7 +9,9 @@ const DataSchema = new Schema(
     id: Number,
     projectID: String,
     name: String,
-    hours: Number
+    hours: Number,
+    buildingType: String,
+    area: Number
   },
   { timestamps: true }
 );

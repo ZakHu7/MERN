@@ -16,11 +16,7 @@ const API = 'http://192.168.23.114:3001/api';
 class Controller extends Component {
   // initialize our state
   state = {
-    data: [],
-    id: 0,
-    projectID: null,
-    name: null,
-    hours: 0,
+    //data: [],
     intervalIsSet: false,
     idToDelete: null,
     idToUpdate: null,
@@ -69,20 +65,23 @@ class Controller extends Component {
     // fetch(API + '/getData')
     //   .then((data) => data.json())
     //   .then((res) => this.setState({ data: res.data }));
+
+    //alert(JSON.stringify(this.props.filters));
+
     axios.get(API + '/getData', {
-      params: {
-        test: 'test',
-      }
+      params: this.props.filters,
     })
-      // .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data.data }));
+      .then((res) => this.props.dataChange(res.data.data));
+
+      //.then((res) => this.setState({ data: res.data.data }));
       //alert(JSON.stringify(res.data.data)));
   };
 
   // our put method that uses our backend api
   // to create new query into our data base
   putDataToDB = (name) => {
-    let currentIds = this.state.data.map((data) => data.id);
+    //let currentIds = this.state.data.map((data) => data.id);
+    let currentIds = this.props.data.map((data) => data.id);
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
       ++idToBeAdded;
@@ -99,9 +98,9 @@ class Controller extends Component {
   deleteFromDB = (idTodelete) => {
     parseInt(idTodelete);
     let objIdToDelete = null;
-    //console.log(this.state.data);
+    //console.log(this.props.data);
     
-    this.state.data.forEach((dat) => {
+    this.props.data.forEach((dat) => {
       //eslint-disable-next-line
       if (dat.id == idTodelete) {
         objIdToDelete = dat._id;
@@ -120,7 +119,7 @@ class Controller extends Component {
   updateDB = (idToUpdate, updateToApply) => {
     let objIdToUpdate = null;
     parseInt(idToUpdate);
-    this.state.data.forEach((dat) => {
+    this.props.data.forEach((dat) => {
       //eslint-disable-next-line
       if (dat.id == idToUpdate) {
         objIdToUpdate = dat._id;
@@ -136,7 +135,7 @@ class Controller extends Component {
   // our put method that uses our backend api
   // to create new query into our data base
   initializeData = () => {
-    let currentIds = this.state.data.map((data) => data.id);
+    let currentIds = this.props.data.map((data) => data.id);
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
       ++idToBeAdded;
@@ -152,13 +151,17 @@ class Controller extends Component {
   // it is easy to understand their functions when you
   // see them render into our screen
   render() {
-    const { data } = this.state;
+    //const { data } = this.state;
     //const classes = useStyles();
 
     return (
       <div>
         
-        <Table data={data}/>
+        <Table
+          data={this.props.data}
+          page={this.props.page}
+          pageChange={this.props.pageChange}
+        />
         {/* <Filters /> */}
         {/* <div style={{ padding: '10px' }}>
           <input

@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -8,12 +8,12 @@ import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
+//import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    // display: 'flex',
+    // flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing(1),
@@ -65,29 +65,30 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MultipleSelect() {
+export default function MultipleSelect(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  //const [personName, setPersonName] = React.useState([]);
 
   function handleChange(event) {
-    setPersonName(event.target.value);
+    //setPersonName(event.target.value);
+    props.onChange(event.target.value);
   }
 
-  function handleChangeMultiple(event) {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setPersonName(value);
-  }
+//   function handleChangeMultiple(event) {
+//     const { options } = event.target;
+//     const value = [];
+//     for (let i = 0, l = options.length; i < l; i += 1) {
+//       if (options[i].selected) {
+//         value.push(options[i].value);
+//       }
+//     }
+//     setPersonName(value);
+//   }
 
   return (
     <div className={classes.root}>
-      <FormControl className={classes.formControl}>
+      {/* <FormControl className={classes.formControl}>
         <InputLabel htmlFor="select-multiple">Name</InputLabel>
         <Select
           multiple
@@ -102,44 +103,21 @@ export default function MultipleSelect() {
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-checkbox">Tag</InputLabel>
+        <InputLabel htmlFor="select-multiple-checkbox">{props.title}</InputLabel>
         <Select
           multiple
-          value={personName}
+          value={props.value}
           onChange={handleChange}
           input={<Input id="select-multiple-checkbox" />}
           renderValue={selected => selected.join(', ')}
           MenuProps={MenuProps}
         >
-          {names.map(name => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-chip">Chip</InputLabel>
-        <Select
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {selected.map(value => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {names.map(name => (
-            <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-              {name}
+          {props.items.map(item => (
+            <MenuItem key={item} value={item}>
+              <Checkbox checked={props.value.indexOf(item) > -1} />
+              <ListItemText primary={item} />
             </MenuItem>
           ))}
         </Select>

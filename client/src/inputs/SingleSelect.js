@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 
 function SingleSelect(props) {
     const classes = useStyles();
-    const [title, setTitle] = React.useState('');
+    // const [title, setTitle] = React.useState('');
     const [open, setOpen] = React.useState(false);
   
     function handleChange(event) {
