@@ -44,7 +44,7 @@ router.post('/initializeData', (req, res) => {
     var request = new mssql.Request();
         
     // query to the database and get the records
-    request.query("SELECT ProjectID, ProjectName, ActualHours, BuildingType, Area1 FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
+    request.query("SELECT ProjectID, ProjectName, ActualHours, QuotedAmt, BuildingType, Area1 FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
         var i = 0;
         recordset.recordsets[0].forEach(function (item) {
           let data = new Data();
@@ -53,11 +53,13 @@ router.post('/initializeData', (req, res) => {
           data.projectID = item.ProjectID.replace(':', '');
           data.name = item.ProjectName;
           data.hours = item.ActualHours;
+          data.quotedAmt = item.QuotedAmt;
           data.buildingType = item.BuildingType;
           data.area = item.Area1 == null ? null : parseInt(item.Area1.replace(/\D/g,''));
 
           //console.log(item.Area1);
-          //console.log(data.area);
+          //console.log(data.quotedAmt);
+
           data.save();
           
           // data.save((err) => {

@@ -12,14 +12,14 @@ function getDataPoints(data) {
         return null;
     }
     data.forEach(element => {
-        if (element.hours != null && element.area != null) {
-            res.push({ x: element.hours, y: element.area });
+        if (element.hours != null && element.quotedAmt != null && element.area != null) {
+            res.push({ x: element.hours, y: element.quotedAmt / element.area});
         }
     });
     return res;
 }
 
-export default function Chart(props) {
+export default function Chart2(props) {
     var myDataPoints = getDataPoints(props.data);
 
     const options = {
@@ -27,12 +27,12 @@ export default function Chart(props) {
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "Area to Hours"
+            text: "$ per Square Foot to Hours"
         },
         axisY: {
-            title: "Area (Sq Foot)",
+            title: "$ per Square Footage",
             includeZero: false,
-            suffix: " ft" //+ "2".sup(),
+            prefix: "$" //+ "2".sup(),
         },
         axisX: {
             title: "Hours",
@@ -41,7 +41,7 @@ export default function Chart(props) {
         },
         data: [{
             type: "scatter",
-            toolTipContent: "Hours - {x}, Area - {y}",
+            toolTipContent: "Hours - {x}, $/ft^2  - {y}",
             dataPoints: myDataPoints
         }]
     }

@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import SingleSelect from './inputs/SingleSelect';
 import MultiSelect from './inputs/MultiSelect';
+import Search from './inputs/Search';
 
 
 
@@ -30,14 +31,7 @@ export default function Filters(props) {
 
     return (
         <div className={classes.root}>
-            <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                    <InputGroup.Text id="basic-addon3">
-                        Search Here
-                    </InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControlR id="basic-url" aria-describedby="basic-addon3" />
-            </InputGroup>
+            <Search/>
 
             <SingleSelect 
                 title={"Project Size"}
