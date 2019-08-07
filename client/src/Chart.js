@@ -5,15 +5,29 @@ import React from 'react';
 import CanvasJSReact from './canvasjs.react';
 import { CanvasJS } from './canvasjs.react';
 import { CanvasJSChart} from './canvasjs.react';
-
 function getDataPoints(data) {
     var res = [];
+    var colours = {
+        null: "Black",
+        "Assembly": "Aqua",
+        "Base Building": "Chocolate",
+        "Grocery": "Coral",
+        "Health Care Facility": "Cyan",
+        "Industrial": "DimGrey",
+        "Institutional": "Lavender",
+        "Miscellaneous": "Red",
+        "Office": "SeaGreen",
+        "Residential": "Green",
+        "Restaurant": "Purple",
+        "Retail": "LightCoral",
+        "Warehouse": "Orange"
+    };
     if (data == undefined) {
         return null;
     }
     data.forEach(element => {
         if (element.hours != null && element.area != null) {
-            res.push({ x: element.hours, y: element.area });
+            res.push({ x: element.hours, y: element.area, color: colours[element.buildingType]});
         }
     });
     return res;
@@ -41,7 +55,7 @@ export default function Chart(props) {
         },
         data: [{
             type: "scatter",
-            toolTipContent: "Hours - {x}, Area - {y}",
+            toolTipContent: "Hours - {x}, Area - {y} ",
             dataPoints: myDataPoints
         }]
     }

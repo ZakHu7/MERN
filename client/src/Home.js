@@ -107,7 +107,7 @@ export default function Home() {
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {/* {JSON.stringify(data)} */}
+                        {JSON.stringify(data)}
                     </Paper>
                 </Grid>
             </Grid>

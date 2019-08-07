@@ -8,12 +8,27 @@ import { CanvasJSChart} from './canvasjs.react';
 
 function getDataPoints(data) {
     var res = [];
+    var colours = {
+        null: "Black",
+        "Assembly": "Aqua",
+        "Base Building": "Chocolate",
+        "Grocery": "Coral",
+        "Health Care Facility": "Cyan",
+        "Industrial": "DimGrey",
+        "Institutional": "Lavender",
+        "Miscellaneous": "Red",
+        "Office": "SeaGreen",
+        "Residential": "Green",
+        "Restaurant": "Purple",
+        "Retail": "LightCoral",
+        "Warehouse": "Orange"
+    };
     if (data == undefined) {
         return null;
     }
     data.forEach(element => {
         if (element.hours != null && element.quotedAmt != null && element.area != null) {
-            res.push({ x: element.hours, y: element.quotedAmt / element.area});
+            res.push({ x: element.hours, y: element.quotedAmt / element.area, color: colours[element.buildingType]});
         }
     });
     return res;
