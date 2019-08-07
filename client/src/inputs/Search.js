@@ -1,27 +1,8 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
-const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
+
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -40,29 +21,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function OutlinedTextFields() {
+export default function OutlinedTextFields(props) {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
-  });
 
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
-  };
+  function handleChange(event) {
+    props.onChange(event.target.value);
+    //alert(event.target.value);
+  }
+
 
   return (
-    <form className={classes.container} noValidate autoComplete="off">
+    <form noValidate autoComplete="off">
 
       <TextField
         id="outlined-search"
-        label="Search field"
+        label={props.title}
         type="search"
         className={classes.textField}
         margin="normal"
         variant="outlined"
+        onChange={handleChange}
+
       />
      
     </form>

@@ -103,21 +103,25 @@ router.get('/getData', (req, res) => {
   //console.log(req.query);
 
   const [gt, lt] = makeQueries.getProjectSize(req.query.projectSize);
+
   const buildingTypeQuery = makeQueries.getBuildingTypes(req.query.buildingTypes);
+  const searchQuery = makeQueries.getSearch(req.query.search);
 
-  //console.log(buildingTypeQuery.length);
-
+  
   const query = {
-    hours: { $gt: gt, $lt: lt }
-    //$or: buildingTypeQuery
+    $and: [
+      {hours: { $gt: gt, $lt: lt }},
+      //{id: {$exists: true}},
+      {$or: buildingTypeQuery},
+      {$or: searchQuery},
+    ]
     //$or: [ { buildingType: / /} ]
   };
 
-  if (buildingTypeQuery.length != 0) {
-    query.$or = buildingTypeQuery;
-    //console.log(query.$or);
 
-  }
+
+
+
   
   const { id, update } = req.body;
   //console.log(req);

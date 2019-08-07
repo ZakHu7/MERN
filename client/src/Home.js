@@ -32,8 +32,8 @@ function createFilterInfo(value, setState) {
     return { value, setState };
 }
 
-function createQueryFilters(projectSize, buildingTypes) {
-    return { projectSize, buildingTypes };
+function createQueryFilters(search, projectSize, buildingTypes) {
+    return { search, projectSize, buildingTypes };
 }
 
 export default function Home() {
@@ -41,6 +41,7 @@ export default function Home() {
     const [data, setData] = React.useState([]);
     const [page, setPage] = React.useState(0);
 
+    const [search, setSearch] = React.useState('');
     const [projectSize, setProjectSize] = React.useState('');
     const [buildingTypes, setBuildingTypes] = React.useState([]);
 
@@ -68,7 +69,7 @@ export default function Home() {
                 <Grid item xs={10}>
                     <Paper className={classes.paper}>
                         <Controller
-                            filters={createQueryFilters(projectSize, buildingTypes)}
+                            filters={createQueryFilters(search, projectSize, buildingTypes)}
                             page={page}
                             pageChange={(value) => handleStateChange(setPage, value)}
                             data={data}
@@ -79,6 +80,7 @@ export default function Home() {
                 <Grid item xs={2}>
                     <Paper className={classes.paper}>
                         <Filters 
+                            search={createFilterInfo(search, setSearch)}
                             projectSize={createFilterInfo(projectSize, setProjectSize)}
                             buildingType={createFilterInfo(buildingTypes, setBuildingTypes)}
                             onChange={(setState, value) => handleFilterChange(setState, value)}
@@ -105,7 +107,7 @@ export default function Home() {
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {JSON.stringify(data)}
+                        {/* {JSON.stringify(data)} */}
                     </Paper>
                 </Grid>
             </Grid>

@@ -31,7 +31,11 @@ export default function Filters(props) {
 
     return (
         <div className={classes.root}>
-            <Search/>
+            <Search
+                title={"Search Field"}
+                value={props.search.value}
+                onChange={(value) => props.onChange(props.search.setState, value)}
+            />
 
             <SingleSelect 
                 title={"Project Size"}

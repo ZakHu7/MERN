@@ -81,7 +81,10 @@ class Controller extends Component {
   // to create new query into our data base
   putDataToDB = (name) => {
     //let currentIds = this.state.data.map((data) => data.id);
-    let currentIds = this.props.data.map((data) => data.id);
+    let currentIds = [];
+    if (this.props.data != undefined) {
+      currentIds = this.props.data.map((data) => data.id);
+    }
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
       ++idToBeAdded;
@@ -135,7 +138,10 @@ class Controller extends Component {
   // our put method that uses our backend api
   // to create new query into our data base
   initializeData = () => {
-    let currentIds = this.props.data.map((data) => data.id);
+    let currentIds = [];
+    if (this.props.data != undefined) {
+      currentIds = this.props.data.map((data) => data.id);
+    }
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
       ++idToBeAdded;
@@ -157,11 +163,14 @@ class Controller extends Component {
     return (
       <div>
         
-        <Table
+        {this.props.data != undefined &&
+          <Table
           data={this.props.data}
           page={this.props.page}
           pageChange={this.props.pageChange}
-        />
+          />
+        }
+        
         {/* <Filters /> */}
         {/* <div style={{ padding: '10px' }}>
           <input

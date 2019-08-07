@@ -15,7 +15,7 @@ module.exports = {
       var res = [];
       
       if (buildingTypes == undefined){
-          return res;
+          return [{id: {$exists: true}}];
       }
     
       var length = buildingTypes.length;
@@ -29,6 +29,12 @@ module.exports = {
       }
       
       return res;
+    },
+    getSearch: function (search) {
+      if (search == ''){
+        return [{id: {$exists: true}}];
+      }
+      return [ {projectID: {$regex: ".*" + search + ".*", $options: 'i'}}, {name: {$regex: ".*" + search + ".*", $options: 'i'}}];
     }
   };
 

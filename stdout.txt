@@ -1,0 +1,175 @@
+
+> fullstack_app@1.0.0 start C:\Users\zakh\fullstack_app
+> concurrently "cd backend && node server.js" "cd client && npm start"
+
+[1] 
+[1] > client@0.1.0 start C:\Users\zakh\fullstack_app\client
+[1] > react-scripts start
+[1] 
+[0] LISTENING ON PORT 3001
+[0] connected to the database
+[0] [0mGET /api/getData?projectSize= [36m304 [0m499.441 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m145.040 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m129.235 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m129.200 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m121.947 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m124.271 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m120.430 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m119.386 ms - -[0m
+[1] Starting the development server...
+[1] 
+[0] [0mGET /api/getData?projectSize= [36m304 [0m138.254 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m139.707 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m137.431 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m128.484 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m120.339 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m125.419 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m119.934 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m121.186 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.398 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m118.937 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m137.994 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m115.886 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m118.042 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m134.199 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m127.394 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m125.831 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m118.627 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m119.693 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m121.159 ms - -[0m
+[1] Compiled with warnings.
+[1] 
+[1] ./src/inputs/Search.js
+[1]   Line 2:   'clsx' is defined but never used                   no-unused-vars
+[1]   Line 4:   'MenuItem' is defined but never used               no-unused-vars
+[1]   Line 7:   'currencies' is assigned a value but never used    no-unused-vars
+[1]   Line 52:  'handleChange' is assigned a value but never used  no-unused-vars
+[1] 
+[1] ./src/Filters.js
+[1]   Line 3:  'InputGroup' is defined but never used    no-unused-vars
+[1]   Line 4:  'FormControlR' is defined but never used  no-unused-vars
+[1] 
+[1] ./src/canvasjs.react.js
+[1]   Line 43:  'CanvasJSReact' is assigned a value but never used  no-unused-vars
+[1] 
+[1] ./src/inputs/MultiSelect.js
+[1]   Line 46:  'names' is assigned a value but never used  no-unused-vars
+[1]   Line 59:  'getStyles' is defined but never used       no-unused-vars
+[1]   Line 70:  'theme' is assigned a value but never used  no-unused-vars
+[1] 
+[1] ./src/Chart.js
+[1]   Line 5:   'CanvasJSReact' is defined but never used  no-unused-vars
+[1]   Line 6:   'CanvasJS' is defined but never used       no-unused-vars
+[1]   Line 11:  Expected '===' and instead saw '=='        eqeqeq
+[1] 
+[1] ./src/Chart2.js
+[1]   Line 5:   'CanvasJSReact' is defined but never used  no-unused-vars
+[1]   Line 6:   'CanvasJS' is defined but never used       no-unused-vars
+[1]   Line 11:  Expected '===' and instead saw '=='        eqeqeq
+[1] 
+[1] ./src/Controller.js
+[1]   Line 99:   Missing radix parameter  radix
+[1]   Line 121:  Missing radix parameter  radix
+[1] 
+[1] Search for the keywords to learn more about each warning.
+[1] To ignore, add // eslint-disable-next-line to the line before.
+[1] 
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.085 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.490 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.471 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m129.403 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m135.105 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m136.450 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m102.632 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m161.107 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m102.775 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m141.703 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m94.791 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m140.885 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m103.820 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.529 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.937 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m116.995 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.637 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m134.116 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m88.928 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m133.822 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m87.570 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m115.809 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m85.771 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m118.332 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.065 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.405 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m91.532 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.866 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.703 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.710 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m85.578 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m128.507 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.280 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m156.218 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m104.586 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m138.044 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m92.467 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m130.937 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m88.111 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m137.554 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m88.752 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m133.322 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m91.117 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m129.255 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m92.184 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m87.797 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.828 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m133.078 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m93.725 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m129.718 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m85.044 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.378 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m87.229 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m131.389 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m93.712 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m127.353 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m88.542 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.431 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m102.186 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m143.133 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m95.565 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m122.377 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m106.476 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m120.751 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m99.105 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m102.010 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m142.442 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m100.620 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.664 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m138.500 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m95.594 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m137.079 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m85.580 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m128.410 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m89.483 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m134.410 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m127.714 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m102.733 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m133.022 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m88.173 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m127.758 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m86.039 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m132.633 ms - -[0m
+[0] [0mGET /api/getData?projectSize=&buildingTypes[]=Base+Building [32m200 [0m34.919 ms - 1123[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m121.624 ms - -[0m
+[0] [0mGET /api/getData?projectSize=&buildingTypes[]=Base+Building [36m304 [0m33.936 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m128.826 ms - -[0m
+[0] [0mGET /api/getData?projectSize=&buildingTypes[]=Base+Building&buildingTypes[]=Assembly [32m200 [0m35.354 ms - 2414[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m133.806 ms - -[0m
+[0] [0mGET /api/getData?projectSize=&buildingTypes[]=Assembly [32m200 [0m34.449 ms - 1316[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m117.008 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m99.382 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m135.185 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m100.404 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m134.066 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m93.653 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m139.656 ms - -[0m
+[0] [0mGET /api/getData?projectSize= [36m304 [0m106.153 ms - -[0m
+[1] ^C^CTerminate batch job (Y/N)? ^C
