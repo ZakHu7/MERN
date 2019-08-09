@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import SingleSelect from './inputs/SingleSelect';
 import MultiSelect from './inputs/MultiSelect';
 import Search from './inputs/Search';
+import Slider from './inputs/Slider';
+import Test from './inputs/Test';
 
 
 
@@ -28,13 +30,20 @@ const useStyles = makeStyles(theme => ({
 export default function Filters(props) {
     const classes = useStyles();
 
-
     return (
         <div className={classes.root}>
             <Search
                 title={"Search Field"}
                 value={props.search.value}
                 onChange={(value) => props.onChange(props.search.setState, value)}
+            />
+            <Slider
+                title={<span>Area (ft<span style={{verticalAlign: 'top', fontSize: 8}}>2</span>)</span>}
+                logarithmic={true}
+                min={100}
+                max={99999}
+                value={props.area.value}
+                onChange={(area) => props.onChange(props.area.setState, area)}
             />
 
             <SingleSelect 
@@ -54,6 +63,7 @@ export default function Filters(props) {
                 onChange={(buildings) => props.onChange(props.buildingType.setState, buildings)}
 
             />
+            {/* <Test /> */}
         </div>
     );
 }

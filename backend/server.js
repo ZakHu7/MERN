@@ -62,14 +62,9 @@ router.post('/initializeData', (req, res) => {
 
           data.save();
           
-          // data.save((err) => {
-          //   if (err) return res.json({ success: false, error: err });
-          //   return res.json({ success: true });
-          // });
         })
 
         if (err) console.log(err);
-
 
 
         // // send records as a response
@@ -85,32 +80,26 @@ router.post('/initializeData', (req, res) => {
 ///
 
 
-// function getProjectSize(size) {
-//   if(size == "Small") {
-//     return [ 0, 90 ];
-//   } else if (size == "Medium") {
-//     return [ 90, 200 ];
-//   } else if (size == "Large") {
-//     return [ 200, 9999 ];
-//   } else {
-//     return [ 0, 9999 ];
-//   }
-// }
 
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  //console.log(req.query);
+  //console.log(req.query.area);
 
-  const [gt, lt] = makeQueries.getProjectSize(req.query.projectSize);
+  const [sizeMin, sizeMax] = makeQueries.getProjectSize(req.query.projectSize);
 
   const buildingTypeQuery = makeQueries.getBuildingTypes(req.query.buildingTypes);
   const searchQuery = makeQueries.getSearch(req.query.search);
-
+  const [areaMin, areaMax] = makeQueries.getArea(req.query.area);
   
   const query = {
     $and: [
-      {hours: { $gt: gt, $lt: lt }},
+      {hours: { $gt: sizeMin, $lt: sizeMax }},
+      
+      {$or: 
+        [{area: { $gt: areaMin, $lt: areaMax }}, {area: null}]
+      },
+
       //{id: {$exists: true}},
       {$or: buildingTypeQuery},
       {$or: searchQuery},

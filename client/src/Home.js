@@ -32,8 +32,19 @@ function createFilterInfo(value, setState) {
     return { value, setState };
 }
 
-function createQueryFilters(search, projectSize, buildingTypes) {
-    return { search, projectSize, buildingTypes };
+function createQueryFilters(search, projectSize, buildingTypes, area) {
+    return { search, projectSize, buildingTypes, area };
+}
+
+function convertArea(x) {
+
+    var minp = 0;
+    var maxp = 100;
+    var minv = Math.log(100);
+    var maxv = Math.log(99999);
+    var scale = (maxv-minv) / (maxp-minp);
+    return Math.round(Math.exp(minv + scale*(x-minp)));
+
 }
 
 export default function Home() {
@@ -44,6 +55,7 @@ export default function Home() {
     const [search, setSearch] = React.useState('');
     const [projectSize, setProjectSize] = React.useState('');
     const [buildingTypes, setBuildingTypes] = React.useState([]);
+    const [area, setArea] = React.useState([0, 100]);
 
     //Changes page of the table
     function handleStateChange(setState, value) {
@@ -52,6 +64,7 @@ export default function Home() {
 
     //Generic filter change event
     function handleFilterChange(setState, value) {
+
         setState(value);
         setPage(0);
     }
@@ -69,7 +82,7 @@ export default function Home() {
                 <Grid item xs={10}>
                     <Paper className={classes.paper}>
                         <Controller
-                            filters={createQueryFilters(search, projectSize, buildingTypes)}
+                            filters={createQueryFilters(search, projectSize, buildingTypes, area.map(item => convertArea(item)))}
                             page={page}
                             pageChange={(value) => handleStateChange(setPage, value)}
                             data={data}
@@ -83,6 +96,7 @@ export default function Home() {
                             search={createFilterInfo(search, setSearch)}
                             projectSize={createFilterInfo(projectSize, setProjectSize)}
                             buildingType={createFilterInfo(buildingTypes, setBuildingTypes)}
+                            area={createFilterInfo(area, setArea)}
                             onChange={(setState, value) => handleFilterChange(setState, value)}
                         />
                     </Paper>

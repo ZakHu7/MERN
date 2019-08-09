@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './Home';
-import Header from './Header';
+import App from './App';
 
 
 import * as serviceWorker from './serviceWorker';
 
 
 
-ReactDOM.render(<Header />, document.getElementById('header'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
 //ReactDOM.render(<Filters />, document.getElementById('filters'));
 
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+// ReactDOM.render(<Home />, document.getElementById('root'));
 //ReactDOM.render(<TableTest />, document.getElementById('tabletest'));
 
 

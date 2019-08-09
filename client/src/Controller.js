@@ -62,10 +62,6 @@ class Controller extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb = () => {
-    // fetch(API + '/getData')
-    //   .then((data) => data.json())
-    //   .then((res) => this.setState({ data: res.data }));
-
     //alert(JSON.stringify(this.props.filters));
 
     axios.get(API + '/getData', {

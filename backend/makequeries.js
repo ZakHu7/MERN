@@ -35,6 +35,9 @@ module.exports = {
         return [{id: {$exists: true}}];
       }
       return [ {projectID: {$regex: ".*" + search + ".*", $options: 'i'}}, {name: {$regex: ".*" + search + ".*", $options: 'i'}}];
+    },
+    getArea: function (area) {
+      return [area[0], area[1]];
     }
   };
 
