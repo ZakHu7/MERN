@@ -1,9 +1,5 @@
 import React from 'react';
 
-
-
-import CanvasJSReact from './canvasjs.react';
-import { CanvasJS } from './canvasjs.react';
 import { CanvasJSChart} from './canvasjs.react';
 
 function getDataPoints(data) {

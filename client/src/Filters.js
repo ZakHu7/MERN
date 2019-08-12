@@ -1,16 +1,11 @@
 import React from 'react';
 
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControlR from 'react-bootstrap/FormControl';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import SingleSelect from './inputs/SingleSelect';
 import MultiSelect from './inputs/MultiSelect';
 import Search from './inputs/Search';
 import Slider from './inputs/Slider';
-import Test from './inputs/Test';
-
 
 
 const useStyles = makeStyles(theme => ({

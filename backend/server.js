@@ -3,11 +3,12 @@ const express = require('express');
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const Data = require('./data');
 const credentials = require("./credentials/mongodb");
 var mssql = require("./db"); 
 var makeQueries = require('./makequeries');
 
+const Data = require('./data');
+const EmployeeData = require('./employeeData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -40,9 +41,8 @@ app.use(logger('dev'));
 router.post('/initializeData', (req, res) => {
     db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
 
-
     var request = new mssql.Request();
-        
+    
     // query to the database and get the records
     request.query("SELECT ProjectID, ProjectName, ActualHours, QuotedAmt, BuildingType, Area1 FROM QuotingDetails WHERE ProjectID > '17-000'", function (err, recordset) {
         var i = 0;
@@ -61,25 +61,11 @@ router.post('/initializeData', (req, res) => {
           //console.log(data.quotedAmt);
 
           data.save();
-          
         })
-
         if (err) console.log(err);
-
-
-        // // send records as a response
-        // res.send(recordset);
-        
     });
-
-  // data.save((err) => {
-  //   if (err) return res.json({ success: false, error: err });
-  //   return res.json({ success: true });
-  // });
 });
 ///
-
-
 
 // this is our get method
 // this method fetches all available data in our database
@@ -106,11 +92,6 @@ router.get('/getData', (req, res) => {
     ]
     //$or: [ { buildingType: / /} ]
   };
-
-
-
-
-
   
   const { id, update } = req.body;
   //console.log(req);
@@ -161,6 +142,47 @@ router.post('/putData', (req, res) => {
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
+  });
+});
+
+/// Trying to load from MS sql Database 
+///
+router.post('/initializeEmployeeData', (req, res) => {
+  db.db.dropCollection('employeedatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  
+  // query to the database and get the records
+  request.query("SELECT EmpFName, EmpLName, EmpTitle FROM Employee WHERE Status = 'active' AND EmpTitle IS NOT NULL", function (err, recordset) {
+      var i = 0;
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new EmployeeData();
+        data.id = i++;
+
+        data.name = item.EmpFName + " " + item.EmpLName;
+
+        data.empTitle = item.EmpTitle;
+
+        //console.log(item.Area1);
+        //console.log(data.quotedAmt);
+
+        data.save();
+      })
+      if (err) console.log(err);
+  });
+});
+
+// this is our get method
+// this method fetches all available data in our database
+router.get('/getEmployeeData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  EmployeeData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
   });
 });
 

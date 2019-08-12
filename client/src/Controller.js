@@ -161,9 +161,9 @@ class Controller extends Component {
         
         {this.props.data != undefined &&
           <Table
-          data={this.props.data}
-          page={this.props.page}
-          pageChange={this.props.pageChange}
+            data={this.props.data}
+            page={this.props.page}
+            pageChange={this.props.pageChange}
           />
         }
         

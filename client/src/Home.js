@@ -2,14 +2,15 @@ import React from 'react';
 
 import Controller from './Controller';
 
+//for the layout
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-
+//different sections
 import Filters from './Filters';
-import Chart from './Chart';
-import Chart2 from './Chart2';
+import Chart from './charts/Chart';
+import Chart2 from './charts/Chart2';
 
 
 const useStyles = makeStyles(theme => ({

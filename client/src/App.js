@@ -7,6 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import { Router, Link } from "@reach/router";
 import Home from './Home';
+import CompanyData from './CompanyData';
 
 // import logo from './RombaldLogo.png';
 
@@ -32,7 +33,7 @@ function App() {
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href="http://192.168.23.117/dashboard">Dashboard</Nav.Link>
                         <Nav.Link href="http://192.168.23.117:90/v1/">Quoting</Nav.Link>
-                        <Nav.Link href="company-data">Company Data</Nav.Link>
+                        <Nav.Link href="companyData">Company Data</Nav.Link>
 
                         <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -53,18 +54,13 @@ function App() {
 
             <Router>
                 <Home path="/" />
+                <CompanyData path="/companyData" />
             </Router>
         </div>
         
     );
 }
 
-
-const Dashboard = () => (
-    <div>
-      <Dashboard />
-    </div>
-);
 
 
 export default App;

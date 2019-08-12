@@ -2,23 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-
-import { ThemeProvider } from '@material-ui/styles';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-
-const theme = createMuiTheme({
-    overrides: {
-        MuiSlider: {
-          valueLabel: {
-            color: 'black',
-            height: 300,
-            width: 400,
-            backgroundColor: "red"
-
-          }
-        }
-    }
-});
   
 
 const useStyles = makeStyles({

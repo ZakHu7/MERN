@@ -31,12 +31,15 @@ module.exports = {
       return res;
     },
     getSearch: function (search) {
-      if (search == ''){
+      if (search == undefined || search == ''){
         return [{id: {$exists: true}}];
       }
       return [ {projectID: {$regex: ".*" + search + ".*", $options: 'i'}}, {name: {$regex: ".*" + search + ".*", $options: 'i'}}];
     },
     getArea: function (area) {
+      if (area == undefined) {
+        return [0, 999999];
+      }
       return [area[0], area[1]];
     }
   };
