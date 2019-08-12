@@ -9,6 +9,7 @@ var makeQueries = require('./makequeries');
 
 const Data = require('./data');
 const EmployeeData = require('./employeeData');
+const AnnualRevenueData = require('./annualRevenueData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -160,12 +161,7 @@ router.post('/initializeEmployeeData', (req, res) => {
         data.id = i++;
 
         data.name = item.EmpFName + " " + item.EmpLName;
-
         data.empTitle = item.EmpTitle;
-
-        //console.log(item.Area1);
-        //console.log(data.quotedAmt);
-
         data.save();
       })
       if (err) console.log(err);
@@ -185,6 +181,54 @@ router.get('/getEmployeeData', (req, res) => {
     return res.json({ success: true, data: data });
   });
 });
+
+/// Trying to load from MS sql Database 
+///
+router.post('/initializeAnnualRevenueData', (req, res) => {
+  db.db.dropCollection('annualrevenuedatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  
+  var queryString = `
+  SELECT Years, SUM(PayAmt) AS 'Revenue'
+    FROM
+  (
+    SELECT YEAR(PayDate) AS 'Years', PayAmt
+      FROM [Rombald2018].[dbo].[Payment]
+  ) AS Tmp
+
+  GROUP BY Years
+  ORDER BY Years DESC`;
+  // query to the database and get the records
+  request.query(queryString, function (err, recordset) {
+      var i = 0;
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new AnnualRevenueData();
+        data.id = i++;
+
+        data.year = item.Years;
+        data.revenue = item.Revenue;
+        data.save();
+      })
+      if (err) console.log(err);
+  });
+});
+
+// this is our get method
+// this method fetches all available data in our database
+router.get('/getAnnualRevenueData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  AnnualRevenueData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+
 
 // append /api for our http requests
 app.use('/api', router);

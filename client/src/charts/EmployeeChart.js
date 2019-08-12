@@ -1,5 +1,5 @@
-/* Pie.js */
-import React, {useState, useEffect } from 'react';
+/* EmployeeChart.js */
+import React, {useEffect } from 'react';
 
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -11,7 +11,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const API = 'http://192.168.23.114:3001/api';
  
-export default function Pie(props) {	
+export default function EmployeeChart(props) {	
 	const [intervalIsSet, setIntervalIsSet] = React.useState(false);
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
@@ -23,15 +23,6 @@ export default function Pie(props) {
 	}, []);
 
 	function initializeEmployeeData(){
-        // let currentIds = [];
-        // if (props.data != undefined) {
-        //   currentIds = props.data.map((data) => data.id);
-        // }
-        // let idToBeAdded = 0;
-        // while (currentIds.includes(idToBeAdded)) {
-        //   ++idToBeAdded;
-        // }
-    
         axios.post(API + '/initializeEmployeeData', {
           id: 0,
           name: "test",
@@ -63,7 +54,7 @@ export default function Pie(props) {
 		theme: "light2", // "light1", "dark1", "dark2"
 		height: 300,
 		title:{
-			text: props.title
+			text: "Employee Data"
 		},
 		data: [{
 			type: "pie",

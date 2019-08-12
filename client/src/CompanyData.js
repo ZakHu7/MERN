@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import Pie from './charts/Pie';
+import EmployeeChart from './charts/EmployeeChart';
+import AnnualRevenueChart from './charts/AnnualRevenueChart';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +30,7 @@ export default function CompanyData() {
     const classes = useStyles();
 
     const [employeeData, setEmployeeData] = React.useState({});
+    const [annualRevenueData, setAnnualRevenueData] = React.useState({});
 
     
 
@@ -59,16 +61,18 @@ export default function CompanyData() {
             <Grid container spacing={3}>
                 <Grid item xs={3}>
                     <Paper className={classes.paper}>
-                        <Pie
-                            title="Employee Data"
+                        <EmployeeChart
                             data={employeeData}
                             dataChange={(value) => handleEmployeeDataChange(value)}
                         />
                     </Paper>
                 </Grid>
                 <Grid item xs={6}>
-                    <Paper 
-                        className={classes.paper}>
+                    <Paper className={classes.paper}>
+                        <AnnualRevenueChart
+                            data={annualRevenueData}
+                            dataChange={(value) => handleStateChange(setAnnualRevenueData, value)}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
@@ -76,6 +80,8 @@ export default function CompanyData() {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         {JSON.stringify(employeeData)}
+                        {JSON.stringify(annualRevenueData)}
+
                     </Paper>
                 </Grid>
             </Grid>
