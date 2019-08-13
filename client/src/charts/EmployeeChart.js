@@ -4,9 +4,8 @@ import React, {useEffect } from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
-var CanvasJSReact = require('./canvasjs.react');
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import { CanvasJSChart} from './canvasjs.react';
+
 
 
 const API = 'http://192.168.23.114:3001/api';
@@ -16,10 +15,10 @@ export default function EmployeeChart(props) {
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
 		getDataFromDb();
-		if (!intervalIsSet) {
-		let interval = setInterval(getDataFromDb, 1000);
-		setIntervalIsSet(interval);
-		}
+		// if (!intervalIsSet) {
+		// let interval = setInterval(getDataFromDb, 1000);
+		// setIntervalIsSet(interval);
+		// }
 	}, []);
 
 	function initializeEmployeeData(){
@@ -54,10 +53,18 @@ export default function EmployeeChart(props) {
 		theme: "light2", // "light1", "dark1", "dark2"
 		height: 300,
 		title:{
-			text: "Employee Data"
+			text: "Employee Data",
+			fontFamily: "roboto",
+            fontWeight: "300",
+            fontSize: "28",
+            horizontalAlign: "left",
+            padding: "10",
 		},
+		toolTip: {
+			fontFamily: "roboto",
+        },
 		data: [{
-			type: "pie",
+			type: "doughnut",
 			//indexLabel: "{label}: {y}%",		
 			startAngle: 0,
 			dataPoints: getDataPoints(),

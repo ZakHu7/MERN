@@ -24,7 +24,7 @@ function getDataPoints(data) {
     }
     data.forEach(element => {
         if (element.hours != null && element.quotedAmt != null && element.area != null) {
-            res.push({ x: element.hours, y: element.quotedAmt / element.area, color: colours[element.buildingType]});
+            res.push({ x: element.hours, y: Math.round(element.quotedAmt / element.area), color: colours[element.buildingType]});
         }
     });
     return res;
@@ -38,21 +38,33 @@ export default function Chart2(props) {
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "$ per Square Foot to Hours"
+            text: "Dollar per Square Foot to Hours",
+            fontFamily: "roboto",
+            fontWeight: "300",
+            fontSize: "28",
+            horizontalAlign: "left",
+            padding: "10",
         },
         axisY: {
             title: "$ per Square Footage",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             includeZero: false,
             prefix: "$" //+ "2".sup(),
         },
         axisX: {
             title: "Hours",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             suffix: "h",
             //interval: 2
         },
+        toolTip: {
+            fontFamily: "roboto",
+        },
         data: [{
             type: "scatter",
-            toolTipContent: "Hours - {x}, $/ft^2  - {y}",
+            toolTipContent: "{x}h, {y} $/sqft",
             dataPoints: myDataPoints
         }]
     }

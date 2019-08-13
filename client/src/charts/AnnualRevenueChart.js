@@ -1,4 +1,4 @@
-import React, {useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
@@ -9,7 +9,7 @@ const API = 'http://192.168.23.114:3001/api';
 function getDataPoints(data) {
     var res = [];
 
-    if (data == undefined) {
+    if (data == undefined || Object.keys(data).length == 0) {
         return null;
     }
     var size = data.length;
@@ -34,10 +34,10 @@ export default function Chart(props) {
 
     useEffect(() => {
 		getDataFromDb();
-		if (!intervalIsSet) {
-		let interval = setInterval(getDataFromDb, 1000);
-		setIntervalIsSet(interval);
-		}
+		// if (!intervalIsSet) {
+		// let interval = setInterval(getDataFromDb, 1000);
+		// setIntervalIsSet(interval);
+		// }
 	}, []);
 
     function initializeAnnualRevenueData(){
@@ -61,21 +61,33 @@ export default function Chart(props) {
         theme: "light2", // "light1", "dark1", "dark2"
         height: 300,
         title:{
-            text: "Annual Revenue Growth"
+            text: "Annual Revenue Growth",
+            fontFamily: "roboto",
+            fontWeight: "300",
+            fontSize: "28",
+            horizontalAlign: "left",
+            padding: "10",
         },
         axisY: {
             title: "Revenue ($)",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             includeZero: false,
             prefix: "$" //+ "2".sup(),
         },
         axisX: {
             title: "Year",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             valueFormatString: "####",
             interval: 1
         },
+        toolTip: {
+            fontFamily: "roboto",
+        },
+        dataPointWidth: 100,
         data: [{
             type: "column",
-            toolTipContent: "Hours - {x}, Area - {y} ",
             dataPoints: myDataPoints,
         }]
     }

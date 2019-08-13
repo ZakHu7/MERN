@@ -10,6 +10,7 @@ var makeQueries = require('./makequeries');
 const Data = require('./data');
 const EmployeeData = require('./employeeData');
 const AnnualRevenueData = require('./annualRevenueData');
+const ActualQuotedData = require('./actualQuotedData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -37,8 +38,8 @@ app.use(bodyParser.json());
 app.use(logger('dev'));
 
 
-/// Trying to load from MS sql Database 
-///
+/// Get the data for the main page.
+/// Initialize means to get the data from the local database and pushing it to MongoDB Atlas
 router.post('/initializeData', (req, res) => {
     db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
 
@@ -146,8 +147,11 @@ router.post('/putData', (req, res) => {
   });
 });
 
-/// Trying to load from MS sql Database 
-///
+// Initializing and getting data for the charts below
+
+/// Getting information from the local database
+/// Retrieves info about employees and pushes to employeedatas
+/// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeEmployeeData', (req, res) => {
   db.db.dropCollection('employeedatas', function(err, result) {if (err) console.log('could not delete collection')});
 
@@ -168,8 +172,7 @@ router.post('/initializeEmployeeData', (req, res) => {
   });
 });
 
-// this is our get method
-// this method fetches all available data in our database
+// Get method for employeeData
 router.get('/getEmployeeData', (req, res) => {
 
   const query = {};
@@ -182,8 +185,9 @@ router.get('/getEmployeeData', (req, res) => {
   });
 });
 
-/// Trying to load from MS sql Database 
-///
+/// Getting information from the local database
+/// Retrieves info about employees and pushes to annualrevenuedatas
+/// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeAnnualRevenueData', (req, res) => {
   db.db.dropCollection('annualrevenuedatas', function(err, result) {if (err) console.log('could not delete collection')});
 
@@ -214,8 +218,7 @@ router.post('/initializeAnnualRevenueData', (req, res) => {
   });
 });
 
-// this is our get method
-// this method fetches all available data in our database
+// Get method for annualRevenueData
 router.get('/getAnnualRevenueData', (req, res) => {
 
   const query = {};
@@ -223,6 +226,121 @@ router.get('/getAnnualRevenueData', (req, res) => {
   //console.log(req);
   //console.log(req.query.projectSize);
   AnnualRevenueData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+/// Getting information from the local database
+/// Retrieves info about employees and pushes to annualrevenuedatas
+/// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
+router.post('/initializeActualQuotedData', (req, res) => {
+  db.db.dropCollection('actualquoteddatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  
+  var queryString = `
+  --Temporary table for what year is to be used
+  DECLARE @ChartTmp TABLE (
+      ProjectID NVARCHAR(65) NOT NULL,
+      ProjMonth INT,
+      PrimaryManager NVARCHAR(65),
+      SecondaryManager NVARCHAR(65),
+      ActualMonthlyTotal FLOAT,
+    ActualAmt FLOAT,
+    BillAmt FLOAT,
+    PercentageUsed FLOAT
+  );
+  
+  INSERT INTO @ChartTmp
+  SELECT ProjectID
+    ,ProjMonth
+    ,PrimaryManager
+    ,SecondaryManager
+    ,SUM(EntryAmt) AS ActualMonthlyTotal
+    ,ActualAmt
+    ,BillAmt
+    ,ActualAmt/BillAmt AS PercentageUsed
+  FROM Rombald2018.dbo.ProfitabilityChart1
+  WHERE 1=1 --#year# --#excluded#
+  GROUP BY ProjectID, PrimaryManager, SecondaryManager, ProjMonth, ActualAmt, BillAmt
+  ORDER BY ProjectID DESC
+  
+  --Temporary table for the pivot of 12 months
+  DECLARE @ChartTmp2 TABLE (
+      ProjectID NVARCHAR(65) NOT NULL,
+      PrimaryManager NVARCHAR(65),
+      SecondaryManager NVARCHAR(65),
+    ActualAmt FLOAT,
+    BillAmt FLOAT,
+    PercentageUsed FLOAT,
+    [12] FLOAT,
+    [11] FLOAT,
+    [10] FLOAT,
+    [9] FLOAT,
+    [8] FLOAT,
+    [7] FLOAT,
+    [6] FLOAT,
+    [5] FLOAT,
+    [4] FLOAT,
+    [3] FLOAT,
+    [2] FLOAT,
+    [1] FLOAT
+  );
+  
+  INSERT INTO @ChartTmp2
+  SELECT *
+  FROM @ChartTmp
+  PIVOT(SUM(ActualMonthlyTotal)
+        FOR ProjMonth IN ([12], [11], [10], [9], [8], [7], [6], [5], [4], [3], [2], [1])) PIV
+  ORDER BY ProjectID DESC
+  
+  
+  SELECT
+    ISNULL(SUM([1] * PercentageUsed) / SUM([1]) * 100, NULL) AS Percentage1
+    ,ISNULL(SUM([2] * PercentageUsed) / SUM([2]) * 100, NULL) AS Percentage2
+    ,ISNULL(SUM([3] * PercentageUsed) / SUM([3]) * 100, NULL) AS Percentage3
+    ,ISNULL(SUM([4] * PercentageUsed) / SUM([4]) * 100, NULL) AS Percentage4
+    ,ISNULL(SUM([5] * PercentageUsed) / SUM([5]) * 100, NULL) AS Percentage5
+    ,ISNULL(SUM([6] * PercentageUsed) / SUM([6]) * 100, NULL) AS Percentage6
+    ,ISNULL(SUM([7] * PercentageUsed) / SUM([7]) * 100, NULL) AS Percentage7
+    ,ISNULL(SUM([8] * PercentageUsed) / SUM([8]) * 100, NULL) AS Percentage8
+    ,ISNULL(SUM([9] * PercentageUsed) / SUM([9]) * 100, NULL) AS Percentage9
+    ,ISNULL(SUM([10] * PercentageUsed) / SUM([10]) * 100, NULL) AS Percentage10
+    ,ISNULL(SUM([11] * PercentageUsed) / SUM([11]) * 100, NULL) AS Percentage11
+    ,ISNULL(SUM([12] * PercentageUsed) / SUM([12]) * 100, NULL) AS Percentage12
+  FROM @ChartTmp2
+  WHERE 1=1 --#user#`;
+
+  var date = new Date();
+  var year = date.getFullYear();
+  queryString = queryString.replace("--#year#", "AND ProjYear = " + year.toString());
+
+  //console.log(queryString);
+  // query to the database and get the records
+  request.query(queryString, function (err, recordset) {
+      var i = 0;
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new ActualQuotedData();
+        data.id = i++;
+        data.percentages = Object.values(item);
+
+        // data.jan = item.Years;
+        // data.revenue = item.Revenue;
+        data.save();
+      })
+      if (err) console.log(err);
+  });
+});
+
+// Get method for annualRevenueData
+router.get('/getActualQuotedData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  ActualQuotedData.find(query, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });

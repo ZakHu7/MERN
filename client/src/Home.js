@@ -119,13 +119,13 @@ export default function Home() {
                     </Paper>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
+            {/* <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         {JSON.stringify(data)}
                     </Paper>
                 </Grid>
-            </Grid>
+            </Grid> */}
         </div>
     );
 }

@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import EmployeeChart from './charts/EmployeeChart';
 import AnnualRevenueChart from './charts/AnnualRevenueChart';
+import ActualQuotedChart from './charts/ActualQuotedChart';
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,6 +32,7 @@ export default function CompanyData() {
 
     const [employeeData, setEmployeeData] = React.useState({});
     const [annualRevenueData, setAnnualRevenueData] = React.useState({});
+    const [actualQuotedData, setActualQuotedData] = React.useState({});
 
     
 
@@ -59,7 +61,7 @@ export default function CompanyData() {
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                     <Paper className={classes.paper}>
                         <EmployeeChart
                             data={employeeData}
@@ -67,7 +69,7 @@ export default function CompanyData() {
                         />
                     </Paper>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                     <Paper className={classes.paper}>
                         <AnnualRevenueChart
                             data={annualRevenueData}
@@ -77,10 +79,25 @@ export default function CompanyData() {
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
+                <Grid item xs={6}>
+                    <Paper className={classes.paper}>
+                        <ActualQuotedChart 
+                            data={actualQuotedData}
+                            dataChange={(value) => handleStateChange(setActualQuotedData, value)}
+                        />
+                    </Paper>
+                </Grid>
+                <Grid item xs={6}>
+                    <Paper className={classes.paper}>
+                        
+                    </Paper>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {JSON.stringify(employeeData)}
-                        {JSON.stringify(annualRevenueData)}
+                        {/* {JSON.stringify(employeeData)}
+                        {JSON.stringify(annualRevenueData)} */}
 
                     </Paper>
                 </Grid>

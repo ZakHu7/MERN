@@ -23,7 +23,7 @@ function getDataPoints(data) {
     }
     data.forEach(element => {
         if (element.hours != null && element.area != null) {
-            res.push({ x: element.hours, y: element.area, color: colours[element.buildingType]});
+            res.push({ x: element.hours, y: Math.round(element.area), color: colours[element.buildingType]});
         }
     });
     return res;
@@ -37,21 +37,33 @@ export default function Chart(props) {
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "Area to Hours"
+            text: "Area to Hours",
+            fontFamily: "roboto",
+            fontWeight: "300",
+            fontSize: "28",
+            horizontalAlign: "left",
+            padding: "10",
         },
         axisY: {
             title: "Area (Sq Foot)",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             includeZero: false,
             suffix: " ft" //+ "2".sup(),
         },
         axisX: {
             title: "Hours",
+            titleFontFamily: "roboto",
+            labelFontFamily: "roboto",
             suffix: "h",
             //interval: 2
         },
+        toolTip: {
+            fontFamily: "roboto",
+        },
         data: [{
             type: "scatter",
-            toolTipContent: "Hours - {x}, Area - {y} ",
+            toolTipContent: "{x}h: {y} sqft",
             dataPoints: myDataPoints
         }]
     }
