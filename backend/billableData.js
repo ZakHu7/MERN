@@ -1,5 +1,5 @@
 
-// /backend/employeeData.js
+// /backend/actualQuotedData.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -8,11 +8,15 @@ const DataSchema = new Schema(
   {
     id: Number,
     employeeID: String,
-    name: String,
-    empTitle: String,
+    hours: Number,
+    year: Number,
+    month: Number,
+    billable: Boolean,
+
+    
   },
   { timestamps: true }
 );
 
 // export the new Schema so we could modify it using Node.js
-module.exports = mongoose.model("employeeData", DataSchema);
+module.exports = mongoose.model("billableData", DataSchema);

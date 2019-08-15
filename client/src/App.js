@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { Router, Link } from "@reach/router";
+import { Router } from "@reach/router";
 import Home from './Home';
 import CompanyData from './CompanyData';
 

@@ -1,37 +1,31 @@
 /* EmployeeChart.js */
-import React, {useEffect } from 'react';
-
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
+import React from 'react';
 
 import { CanvasJSChart} from './canvasjs.react';
 
-
-
-const API = 'http://192.168.23.114:3001/api';
  
 export default function EmployeeChart(props) {	
-	const [intervalIsSet, setIntervalIsSet] = React.useState(false);
-	// Similar to componentDidMount and componentDidUpdate:
-	useEffect(() => {
-		getDataFromDb();
-		// if (!intervalIsSet) {
-		// let interval = setInterval(getDataFromDb, 1000);
-		// setIntervalIsSet(interval);
-		// }
-	}, []);
+	//const [intervalIsSet, setIntervalIsSet] = React.useState(false);
 
-	function initializeEmployeeData(){
-        axios.post(API + '/initializeEmployeeData', {
-          id: 0,
-          name: "test",
-        });
-    }
+	// // Similar to componentDidMount and componentDidUpdate:
+	// useEffect(() => {
+	// 	getDataFromDb();
+	// 	// if (!intervalIsSet) {
+	// 	// let interval = setInterval(getDataFromDb, 1000);
+	// 	// setIntervalIsSet(interval);
+	// 	// }
+	// }, []);
 
-    function getDataFromDb(){
-		axios.get(API + '/getEmployeeData')
-          .then((res) => props.dataChange(res.data.data));
-	};
+	// function initializeEmployeeData(){
+    //     axios.post(API + '/initializeEmployeeData', {
+    //       id: 0,
+    //     });
+    // }
+
+    // function getDataFromDb(){
+	// 	axios.get(API + '/getEmployeeData')
+    //       .then((res) => props.dataChange(res.data.data));
+	// };
 	
 	function getDataPoints(){
 		var dataPoints = [];
@@ -76,14 +70,14 @@ export default function EmployeeChart(props) {
 			<CanvasJSChart options = {options} 
 				/* onRef={ref => this.chart = ref} */
 			/>
-			<Button
+			{/* <Button
 				variant="contained"
 				color="secondary"
-				onClick={() => initializeEmployeeData()}
+				//onClick={() => initializeEmployeeData()}
 			>
 				REFRESH DATA
-			</Button>
-
+			</Button> */}
+			{/* {JSON.stringify(props.data)} */}
 			
 			{/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
 		</div>

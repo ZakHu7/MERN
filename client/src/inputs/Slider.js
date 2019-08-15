@@ -1,17 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
   
-
-const useStyles = makeStyles({
-  root: {
-    width: 300,
-  },
-  markLabel: {
-      width: 300,
-  },
-});
 
 function valuetext(value) {
   return `${value}°C`;
@@ -19,8 +9,6 @@ function valuetext(value) {
   
 
 export default function RangeSlider(props) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState([0, 100]);
 
 
   function valueLabelFormat(x) {
@@ -51,7 +39,6 @@ export default function RangeSlider(props) {
             valueLabelDisplay="auto"
             aria-labelledby="range-slider"
             getAriaValueText={valuetext}
-            valueLabelDisplay="auto"
             valueLabelFormat={valueLabelFormat}
             step="1"
 

@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
+import React from 'react';
 
 import { CanvasJSChart} from './canvasjs.react';
 
-const API = 'http://192.168.23.114:3001/api';
 
 function getDataPoints(data) {
     var res = [];
@@ -29,29 +26,23 @@ function getDataPoints(data) {
 }
 
 export default function Chart(props) {
-	const [intervalIsSet, setIntervalIsSet] = React.useState(false);
+	//const [intervalIsSet, setIntervalIsSet] = React.useState(false);
 
 
-    useEffect(() => {
-		getDataFromDb();
-		// if (!intervalIsSet) {
-		// let interval = setInterval(getDataFromDb, 1000);
-		// setIntervalIsSet(interval);
-		// }
-	}, []);
+    // useEffect(() => {
+	// 	getDataFromDb();
+	// }, []);
 
-    function initializeAnnualRevenueData(){
-        axios.post(API + '/initializeAnnualRevenueData', {
-          id: 0,
-          name: "test",
-        });
-    }
+    // function initializeAnnualRevenueData(){
+    //     axios.post(API + '/initializeAnnualRevenueData', {
+    //       id: 0,
+    //     });
+    // }
 
-    function getDataFromDb(){
-        axios.get(API + '/getAnnualRevenueData')
-          //.then((res) => alert("hi"))
-          .then((res) => props.dataChange(res.data.data));
-	};
+    // function getDataFromDb(){
+    //     axios.get(API + '/getAnnualRevenueData')
+    //       .then((res) => props.dataChange(res.data.data));
+	// };
 	
     var myDataPoints = getDataPoints(props.data);
 
@@ -61,7 +52,7 @@ export default function Chart(props) {
         theme: "light2", // "light1", "dark1", "dark2"
         height: 300,
         title:{
-            text: "Annual Revenue Growth",
+            text: "Annual Revenue 'Growth'",
             fontFamily: "roboto",
             fontWeight: "300",
             fontSize: "28",
@@ -97,13 +88,13 @@ export default function Chart(props) {
         <CanvasJSChart options = {options}
             /* onRef = {ref => this.chart = ref} */
         />
-        <Button
+        {/* <Button
             variant="contained"
             color="secondary"
-            onClick={() => initializeAnnualRevenueData()}
+            //onClick={() => initializeAnnualRevenueData()}
         >
             REFRESH DATA
-        </Button>
+        </Button> */}
       </div>
     );
 }

@@ -11,6 +11,7 @@ const Data = require('./data');
 const EmployeeData = require('./employeeData');
 const AnnualRevenueData = require('./annualRevenueData');
 const ActualQuotedData = require('./actualQuotedData');
+const BillableData = require('./billableData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -158,12 +159,12 @@ router.post('/initializeEmployeeData', (req, res) => {
   var request = new mssql.Request();
   
   // query to the database and get the records
-  request.query("SELECT EmpFName, EmpLName, EmpTitle FROM Employee WHERE Status = 'active' AND EmpTitle IS NOT NULL", function (err, recordset) {
+  request.query("SELECT EmployeeID, EmpFName, EmpLName, EmpTitle FROM Employee WHERE Status = 'active' AND EmpTitle IS NOT NULL", function (err, recordset) {
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new EmployeeData();
         data.id = i++;
-
+        data.employeeID = item.EmployeeID;
         data.name = item.EmpFName + " " + item.EmpLName;
         data.empTitle = item.EmpTitle;
         data.save();
@@ -232,7 +233,7 @@ router.get('/getAnnualRevenueData', (req, res) => {
 });
 
 /// Getting information from the local database
-/// Retrieves info about employees and pushes to annualrevenuedatas
+/// Retrieves info about employees and pushes to actualquoteddatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeActualQuotedData', (req, res) => {
   db.db.dropCollection('actualquoteddatas', function(err, result) {if (err) console.log('could not delete collection')});
@@ -333,7 +334,7 @@ router.post('/initializeActualQuotedData', (req, res) => {
   });
 });
 
-// Get method for annualRevenueData
+// Get method for actualQuotedData
 router.get('/getActualQuotedData', (req, res) => {
 
   const query = {};
@@ -346,6 +347,71 @@ router.get('/getActualQuotedData', (req, res) => {
   });
 });
 
+/// Getting information from the local database
+/// Retrieves info about employees and pushes to billabledatas
+/// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
+router.post('/initializeBillableData', (req, res) => {
+  db.db.dropCollection('billabledatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  
+  var queryString = `
+  SELECT 
+	[EmployeeID]
+	,SUM([TEHours]) AS Hours
+	,[Year]
+	,[Month]
+    ,[TEBill]
+FROM (
+SELECT 
+      [EmployeeID]
+      ,[TEHours]
+      ,YEAR([TEDate]) AS 'Year'
+      ,MONTH([TEDate]) AS 'Month'
+      ,[TEBill]
+FROM [Rombald2018].[dbo].[TimeEntry]
+) AS Tmp
+WHERE [Year] = --#year#
+GROUP BY EmployeeID, [Year], [Month], [TEBill]
+ORDER BY [YEAR] DESC, [MONTH], EmployeeID`;
+
+  var date = new Date();
+  var year = date.getFullYear();
+  queryString = queryString.replace("--#year#", "'" + year.toString() + "'");
+
+  //console.log(queryString);
+  // query to the database and get the records
+  request.query(queryString, function (err, recordset) {
+      var i = 0;
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new BillableData();
+        data.id = i++;
+        data.employeeID = item.EmployeeID;
+        data.hours = item.Hours;
+        data.year = item.Year;
+        data.month = item.Month;
+        data.billable = item.TEBill == 0 ? false : true;
+
+        // data.jan = item.Years;
+        // data.revenue = item.Revenue;
+        data.save();
+      })
+      if (err) console.log(err);
+  });
+});
+
+// Get method for billableData
+router.get('/getBillableData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  BillableData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
 
 
 // append /api for our http requests

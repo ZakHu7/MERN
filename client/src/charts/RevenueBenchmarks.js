@@ -51,26 +51,6 @@ function getAvgDataPoints(data) {
 }
 
 export default function Chart(props) {
-	//const [intervalIsSet, setIntervalIsSet] = React.useState(false);
-
-    // useEffect(() => {
-	// 	getDataFromDb();
-	// 	// if (!intervalIsSet) {
-	// 	// let interval = setInterval(getDataFromDb, 1000);
-	// 	// setIntervalIsSet(interval);
-	// 	// }
-	// }, []);
-
-    // function initializeActualQuotedData(){
-    //     axios.post(API + '/initializeActualQuotedData', {
-    //       id: 0,
-    //     });
-    // }
-
-    // function getDataFromDb(){
-	// 	axios.get(API + '/getActualQuotedData')
-    //       .then((res) => props.dataChange(res.data.data));
-	// };
 
     var myDataPoints = getDataPoints(props.data);
     var myAvgDataPoints = getAvgDataPoints(props.data);
