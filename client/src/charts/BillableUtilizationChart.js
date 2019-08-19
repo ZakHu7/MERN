@@ -62,8 +62,8 @@ function getData(data, employeeData) {
     var companyPoints = [];
     companyStats.forEach((stat, i) => {
         if (stat != null) {
-            const date = new Date(2019, i);
-            companyPoints.push({ x: date, y: Math.round(stat / employeeNum)});
+            //const date = new Date(2019, i);
+            companyPoints.push({ x: new Date(2019, i), y: Math.round(stat / employeeNum)});
         }
     });
     let companyLine = {
@@ -86,6 +86,7 @@ export default function Chart(props) {
     const options = {
         animationEnabled: true,
         exportEnabled: true,
+        height: 400,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
             text: "Billable Utilization",
@@ -110,8 +111,10 @@ export default function Chart(props) {
 
             intervalType: "month",
             valueFormatString: "MMM",
+            interval: 1,
         },
         legend: {
+            fontFamily: "roboto",
             cursor: "pointer",
             itemclick: function (e) {
                 if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
@@ -136,6 +139,7 @@ export default function Chart(props) {
             <CanvasJSChart options = {options}
                 /* onRef = {ref => this.chart = ref} */
             />
+            {/* {JSON.stringify(myData)} */}
         </div>
     );
 }

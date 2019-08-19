@@ -32,7 +32,7 @@ export default function EmployeeChart(props) {
 		//alert(props.data);
 		for (var key in props.data) {
 			// skip loop if the property is from prototype
-			if (!props.data.hasOwnProperty(key)) continue;
+			if (!props.data.hasOwnProperty(key) || key == "Employee") continue;
 		
 			var value = props.data[key];
 			
@@ -45,7 +45,7 @@ export default function EmployeeChart(props) {
 		animationEnabled: true,
 		exportEnabled: true,
 		theme: "light2", // "light1", "dark1", "dark2"
-		height: 300,
+		height: 400,
 		title:{
 			text: "Employee Data",
 			fontFamily: "roboto",

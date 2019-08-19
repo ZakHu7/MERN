@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 
 //different sections
 import Filters from './Filters';
-import Chart from './charts/Chart';
-import Chart2 from './charts/Chart2';
+import AreatoHoursChart from './charts/AreatoHoursChart';
+import DollarsPerSquareFootChart from './charts/DollarsPerSquareFootChart';
 
 
 const useStyles = makeStyles(theme => ({
@@ -106,14 +106,14 @@ export default function Home() {
             <Grid container spacing={3}>
                 <Grid item xs={6}>
                     <Paper className={classes.paper}>
-                        <Chart
+                        <AreatoHoursChart
                             data={data}
                         />
                     </Paper>
                 </Grid>
                 <Grid item xs={6}>
                     <Paper className={classes.paper}>
-                        <Chart2
+                        <DollarsPerSquareFootChart
                             data={data}
                         />
                     </Paper>

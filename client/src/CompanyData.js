@@ -11,18 +11,23 @@ import Button from '@material-ui/core/Button';
 import EmployeeChart from './charts/EmployeeChart';
 import AnnualRevenueChart from './charts/AnnualRevenueChart';
 import ActualQuotedChart from './charts/ActualQuotedChart';
-import BillableUtilization from './charts/BillableUtilization';
-import RevenueBenchmarks from './charts/RevenueBenchmarks';
+import BillableUtilizationChart from './charts/BillableUtilizationChart';
+import RevenueBenchmarksChart from './charts/RevenueBenchmarksChart';
+import HitRateChart from './charts/HitRateChart';
+
+import GoogleMap from './googleMap';
+
 
 const API = 'http://192.168.23.114:3001/api';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        
+        backgroundColor: "whiteSmoke",
     },
     paper: {
         padding: theme.spacing(2),
+        margin: 10,
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
@@ -30,6 +35,11 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
+    button: {
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        margin: "auto",
+        color: "white",
+    }
 }));
 
 function initializeAllData(){
@@ -46,6 +56,10 @@ function initializeAllData(){
     axios.post(API + '/initializeBillableData', {
         id: 0,
     });
+
+    axios.post(API + '/initializeHitRateData', {
+        id: 0,
+    });
 }
 
 export default function CompanyData() {
@@ -57,6 +71,7 @@ export default function CompanyData() {
     const [annualRevenueData, setAnnualRevenueData] = React.useState({});
     const [actualQuotedData, setActualQuotedData] = React.useState({});
     const [billableData, setBillableData] = React.useState({});
+    const [hitRateData, setHitRateData] = React.useState({});
 
     
     useEffect(() => {
@@ -74,6 +89,8 @@ export default function CompanyData() {
           .then((res) => setActualQuotedData(res.data.data));
 		axios.get(API + '/getBillableData')
           .then((res) => setBillableData(res.data.data));
+        axios.get(API + '/getHitRateData')
+          .then((res) => setHitRateData(res.data.data));
 	};
 
 
@@ -88,10 +105,12 @@ export default function CompanyData() {
 
         var size = value.length;
         var employeePieData = {};
+        employeePieData.Employee = 0;
         for (var i = 0; i < size; i++) {
             let employee = value[i];
             // For the EmployeeChart
             var category = employee.empTitle;
+            employeePieData.Employee++;
             if(employeePieData.hasOwnProperty(category)){
                 employeePieData[category]++;
             } else {
@@ -115,14 +134,28 @@ export default function CompanyData() {
 
     return (
         <div className={classes.root}>
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => initializeAllData()}
-            >
-                REFRESH DATA
-            </Button>
-            <Grid container spacing={3}>
+             <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                        <GoogleMap />
+
+                    </Paper>
+                </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            onClick={() => initializeAllData()}
+                        >
+                            REFRESH DATA
+                        </Button>
+                    </Paper>
+                </Grid>
+            </Grid>
+            <Grid container spacing={2}>
                 <Grid item xs={4}>
                     <Paper className={classes.paper}>
                         <EmployeeChart
@@ -139,7 +172,7 @@ export default function CompanyData() {
                     </Paper>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <Paper className={classes.paper}>
                         <ActualQuotedChart 
@@ -149,35 +182,36 @@ export default function CompanyData() {
                 </Grid>
                 <Grid item xs={6}>
                     <Paper className={classes.paper}>
-                        <BillableUtilization
+                        <BillableUtilizationChart
                             employeeData={employeeData}
                             data={billableData}
                         />
                     </Paper>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 <Grid item xs={4}>
                     <Paper className={classes.paper}>
-                        <RevenueBenchmarks
-                            employeeData={employeeData}
+                        <RevenueBenchmarksChart
+                            employeeData={employeeChartData}
                             revenueData={annualRevenueData}
                         />
                     </Paper>
                 </Grid>
                 <Grid item xs={4}>
                     <Paper className={classes.paper}>
-                        
+                        <HitRateChart
+                            data = {hitRateData}
+                        />
                     </Paper>
                 </Grid>
                 <Grid item xs={4}>
                     <Paper className={classes.paper}>
-                        
                     </Paper>
                 </Grid>
             </Grid>
             
-            {JSON.stringify(employeeData)}
+            {/* {JSON.stringify(employeeData)} */}
         </div>
     );
 }

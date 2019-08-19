@@ -23,16 +23,7 @@ class Controller extends Component {
     objectToUpdate: null,
   };
 
-  useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      marginTop: theme.spacing(3),
-      overflowX: 'auto',
-    },
-    table: {
-      minWidth: 650,
-    },
-  }));
+
   
   // when component mounts, first thing it does is fetch all existing data in our db
   // then we incorporate a polling logic so that we can easily see if our db has
@@ -149,12 +140,14 @@ class Controller extends Component {
     });
   };
 
+
   // here is our UI
   // it is easy to understand their functions when you
   // see them render into our screen
   render() {
+
+
     //const { data } = this.state;
-    //const classes = useStyles();
 
     return (
       <div>
@@ -167,50 +160,6 @@ class Controller extends Component {
           />
         }
         
-        {/* <Filters /> */}
-        {/* <div style={{ padding: '10px' }}>
-          <input
-            type="text"
-            onChange={(e) => this.setState({ name: e.target.value })}
-            placeholder="add something in the database"
-            style={{ width: '200px' }}
-          />
-          <button onClick={() => this.putDataToDB(this.state.name)}>
-            ADD
-          </button>
-        </div>
-        <div style={{ padding: '10px' }}>
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ idToDelete: e.target.value })}
-            placeholder="put id of item to delete here"
-          />
-          <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>
-            DELETE
-          </button>
-        </div>
-        <div style={{ padding: '10px' }}>
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ idToUpdate: e.target.value })}
-            placeholder="id of item to update here"
-          />
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ updateToApply: e.target.value })}
-            placeholder="put new value of the item here"
-          />
-          <button
-            onClick={() =>
-              this.updateDB(this.state.idToUpdate, this.state.updateToApply)
-            }
-          >
-            UPDATE
-          </button>
-        </div> */}
         <div>
           <Button
             variant="contained"

@@ -12,6 +12,7 @@ const EmployeeData = require('./employeeData');
 const AnnualRevenueData = require('./annualRevenueData');
 const ActualQuotedData = require('./actualQuotedData');
 const BillableData = require('./billableData');
+const HitRateData = require('./hitRateData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -411,6 +412,110 @@ router.get('/getBillableData', (req, res) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
+});
+
+
+/// Getting information from the local database
+/// Retrieves info about employees and pushes to billabledatas
+/// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
+router.post('/initializeHitRateData', (req, res) => {
+  db.db.dropCollection('hitratedatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  
+  var queryString = `
+DECLARE @tmp TABLE (
+  ProjectID NVARCHAR(65) NULL,
+  [ProjectName] NVARCHAR(100) NULL,
+  [Year] FLOAT NULL,
+  [Month] FLOAT NULL,
+  ProjectStatus NVARCHAR(30) NULL
+);
+
+INSERT INTO @tmp
+SELECT
+  [ProjectID]
+  ,[ProjectName]
+
+  ,YEAR([ProjectStartDate]) AS 'Year'
+  ,MONTH([ProjectStartDate]) AS 'Month'
+  ,[ProjectStatus]
+  
+FROM [Rombald2018].[dbo].[Project]
+
+DECLARE @tmp2 TABLE (
+  [Year] FLOAT NULL,
+  [Month] FLOAT NULL,
+  [Status] NVARCHAR(30) NULL,
+  [Count] INT NULL
+);
+
+INSERT INTO @tmp2
+SELECT
+	[Year]
+	,[Month]
+	,'Received' AS 'Status'
+	,COUNT(ProjectStatus) AS 'Count'
+FROM @tmp
+WHERE ProjectStatus IN ('Active', 'Completed')
+GROUP BY [Year], [Month]
+UNION
+SELECT
+	[Year]
+	,[Month]
+	,'Total' AS 'Status'
+	,COUNT(ProjectStatus) AS 'Count'
+FROM @tmp
+GROUP BY [Year], [Month]
+ORDER BY [Year] DESC, [Month]
+
+SELECT 
+	A.[Year]
+	,A.[Month]
+	,A.[Count] AS 'Received'
+	,B.[Count] AS 'Total'
+FROM @tmp2 A, @tmp2 B
+WHERE 
+	A.[Status] < B.[Status]
+	AND A.[Year] = B.[Year]
+	AND A.[Month] = B.[Month]
+	AND YEAR(GETDATE()) - 5 < A.[Year]
+ORDER BY A.[Year] DESC, A.[Month];
+`;
+
+  // var date = new Date();
+  // var year = date.getFullYear();
+  // queryString = queryString.replace("--#year#", "'" + year.toString() + "'");
+
+  //console.log(queryString);
+  // query to the database and get the records
+  request.query(queryString, function (err, recordset) {
+      var i = 0;
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new HitRateData();
+        data.id = i++;
+        data.year = item.Year;
+        data.month = item.Month;
+        data.received = item.Received;
+        data.total = item.Total;
+
+        data.save();
+      })
+      if (err) console.log(err);
+  });
+});
+
+// Get method for billableData
+router.get('/getHitRateData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  HitRateData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  }).sort( { id: 1 } );
 });
 
 

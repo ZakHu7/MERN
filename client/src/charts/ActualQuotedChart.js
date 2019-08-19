@@ -78,9 +78,10 @@ export default function Chart(props) {
     const options = {
         animationEnabled: true,
         exportEnabled: true,
+        height: 400,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "Actual vs Quoted",
+            text: "Actual vs Quoted Company Stats",
             fontFamily: "roboto",
             fontWeight: "300",
             fontSize: "28",
@@ -102,6 +103,8 @@ export default function Chart(props) {
 
             intervalType: "month",
             valueFormatString: "MMM",
+            interval: 1,
+
             //suffix: "h",
             //interval: 2
         },
@@ -128,14 +131,14 @@ export default function Chart(props) {
         data: [{
             type: "line",
             name: "Company Stat",
-            color: "cadetblue",
+            color: "#e73158",
             dataPoints: myDataPoints
         },
         {
             type: "line",
             lineDashType: "dashDot",              
             name: "Company Stat Average",
-            color: "lightcoral",
+            color: "#ff9a00",
             dataPoints: myAvgDataPoints
         }],
         
@@ -153,6 +156,7 @@ export default function Chart(props) {
         >
             REFRESH DATA
         </Button> */}
+        {/* {JSON.stringify(myDataPoints)} */}
       </div>
     );
 }

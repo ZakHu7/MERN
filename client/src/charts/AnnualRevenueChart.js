@@ -50,7 +50,7 @@ export default function Chart(props) {
         animationEnabled: true,
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
-        height: 300,
+        height: 400,
         title:{
             text: "Annual Revenue 'Growth'",
             fontFamily: "roboto",

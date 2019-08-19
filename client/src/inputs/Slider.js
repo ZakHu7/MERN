@@ -40,6 +40,7 @@ export default function RangeSlider(props) {
             aria-labelledby="range-slider"
             getAriaValueText={valuetext}
             valueLabelFormat={valueLabelFormat}
+            theme="secondary"
             step="1"
 
         />

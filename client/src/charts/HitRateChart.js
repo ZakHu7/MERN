@@ -1,10 +1,12 @@
 import React from 'react';
 
 import { CanvasJSChart} from './canvasjs.react';
+import { getContrastRatio } from '@material-ui/core/styles';
 
 
 var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
 
 // Convert data into useable data for the chart
 function getDataPoints(data) {
@@ -15,52 +17,61 @@ function getDataPoints(data) {
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
-    for (var i = 0; i < 12; i++ ) {
-        //alert(data[0].percentages[i])
-        let p = data[0].percentages[i] == null ? null : Math.round( data[0].percentages[i] );
-        res.push({ x: new Date(2019, i), y: p });
-    }
+    var date = new Date();
+    var currentYear = date.getFullYear();
 
-    //alert(res);
+    // Get the hit rate percentage from total received and total quoted
+    data.forEach((item) => {
+        if (item.year == currentYear) {
+            let p = Math.round( item.received / item.total * 100 );
+            res.push({ x: new Date(currentYear, item.month - 1), y: p , indexLabel: "Received:" + item.received + ", Total:" + item.total});
+        }
+    });
+
     return res;
 }
 
-// Get average of company stats
-function getAvgDataPoints(data) {
+// Convert data into useable data for the chart
+function getPredictedDataPoints(data) {
     var res = [];
+
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
-    var dataCount = 0;
-    var total = 0;
-    for (let i = 0; i < 12; i++ ) {
-        let monthData = data[0].percentages[i];
-        if (monthData != null) {
-            dataCount++;
-            total += Math.round(monthData);
+    var date = new Date();
+    var currentYear = date.getFullYear();
+    var predicted = new Array(12).fill(0);
+    // Get the hit rate percentage from total received and total quoted
+    data.forEach((item) => {
+        if (item.year != currentYear) {
+            let p = item.received / item.total * 100;
+            predicted[item.month - 1] += p;
         }
-    }
-    if (dataCount != 0) {
-        let p = Math.round(total/dataCount);
-        for (let i = 0; i < 12; i++ ) {
-            res.push({ x: new Date(2019, i), y: dataCount <= i ? null : p});
-        }
-    }
+    });
+
+    predicted.forEach((val, i) => {
+        res.push({ x: new Date(currentYear, i), y: Math.round( val/4 ), indexLabel: "Past 4 Years Average" });
+    });
 
     return res;
 }
 
 export default function Chart(props) {
+    // var bar = new Array(12).fill(null);
+    // bar[0].month += 10;
+    // alert(bar);
 
+    //var orderedData = getOrderedData(props.data);
     var myDataPoints = getDataPoints(props.data);
-    var myAvgDataPoints = getAvgDataPoints(props.data);
+    var myPredictedDataPoints = getPredictedDataPoints(props.data);
 
     const options = {
         animationEnabled: true,
         exportEnabled: true,
+        height: 400,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "Actual vs Quoted",
+            text: "Hit Rate",
             fontFamily: "roboto",
             fontWeight: "300",
             fontSize: "28",
@@ -82,41 +93,36 @@ export default function Chart(props) {
 
             intervalType: "month",
             valueFormatString: "MMM",
-            //suffix: "h",
-            //interval: 2
+            interval: 1,
         },
         toolTip: {
             fontFamily: "roboto",
             contentFormatter: function (e) {
 				var content = " ";
 				for (var i = 0; i < e.entries.length; i++) {
-					content += months[e.entries[i].dataPoint.x.getMonth()] + ": " + "<strong>" + e.entries[i].dataPoint.y + " %</strong>";
+                    content += "<strong>" + months[e.entries[i].dataPoint.x.getMonth()] + "</strong><br/>";
+                    content += e.entries[i].dataPoint.indexLabel + "<br/>";
+                    content += "Percentage: " + e.entries[i].dataPoint.y + "%";
 					content += "<br/>";
 				}
 				return content;
 			}
         },
-        // data: [{
-        //     type: "line",
-        //     toolTipContent: "Date - {x}, Percent - {y} ",
-        //     dataPoints: [
-        //         { x: new Date(2019, 0), y: 100 },
-        //         { x: new Date(2019, 1), y: 100 },
-        //         { x: new Date(2019, 2), y: 100 }
-        //     ]
-        // }],
+
         data: [{
             type: "line",
-            name: "Company Stat",
-            color: "cadetblue",
+            name: " Hit Rate by Projects",
+            color: "#fe6bd4",
+            indexLabelFontSize: 0,
             dataPoints: myDataPoints
         },
         {
             type: "line",
-            lineDashType: "dashDot",              
-            name: "Company Stat Average",
-            color: "lightcoral",
-            dataPoints: myAvgDataPoints
+            lineDashType: "dashDot",  
+            name: " Hit Rate by Projects Prediction ",
+            color: "#de6bfe",
+            indexLabelFontSize: 0,
+            dataPoints: myPredictedDataPoints
         }],
         
     }
@@ -126,13 +132,7 @@ export default function Chart(props) {
         <CanvasJSChart options = {options}
             /* onRef = {ref => this.chart = ref} */
         />
-        {/* <Button
-            variant="contained"
-            color="secondary"
-            //onClick={() => initializeActualQuotedData()}
-        >
-            REFRESH DATA
-        </Button> */}
+        {JSON.stringify(props.data)}
       </div>
     );
 }
