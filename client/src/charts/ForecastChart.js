@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { CanvasJSChart} from './canvasjs.react';
-import { getContrastRatio } from '@material-ui/core/styles';
 
 
 var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
@@ -9,22 +8,36 @@ var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 
 // Convert data into useable data for the chart
-function getDataPoints(data, type) {
+function getQuotedDataPoints(data, type) {
     var res = [];
 
-    //alert(JSON.stringify(data[0]))
-    //alert(data["percentages"] == undefined);
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
     var date = new Date();
     var currentYear = date.getFullYear();
 
-    // Get the hit rate percentage from total received and total quoted
     data.forEach((item) => {
         if (item.year == currentYear) {
-            let p = Math.round( item.received / item.total * 100 );
-            res.push({ x: new Date(currentYear, item.month - 1), y: p , indexLabel: "Received:" + item.received + ", Total:" + item.total});
+            res.push({ x: new Date(currentYear, item.month - 1), y: item.total , indexLabel: "Total: $" + item.total});
+        }
+    });
+
+    return res;
+}
+// Convert data into useable data for the chart
+function getActualDataPoints(data, type) {
+    var res = [];
+
+    if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
+        return null;
+    }
+    var date = new Date();
+    var currentYear = date.getFullYear();
+    
+    data.forEach((item) => {
+        if (item.year == currentYear) {
+            res.push({ x: new Date(currentYear, item.month - 1), y: item.received , indexLabel: "Received: $" + item.received});
         }
     });
 
@@ -62,11 +75,11 @@ export default function Chart(props) {
     // alert(bar);
 
     //var orderedData = getOrderedData(props.data);
-    var myDataPoints = getDataPoints(props.data, 'Projects');
-    var myPredictedDataPoints = getPredictedDataPoints(props.data, 'Projects');
+    var myQuotedDataPoints = getQuotedDataPoints(props.data);
+    var myActualDataPoints = getActualDataPoints(props.data);
+    //var myPredictedDataPoints = getPredictedDataPoints(props.data, 'Projects');
 
-    var myRevDataPoints = getDataPoints(props.revData, 'Revenue');
-    var myPredictedRevDataPoints = getPredictedDataPoints(props.revData, 'Revenue');
+    //var myPredictedRevDataPoints = getPredictedDataPoints(props.revData, 'Revenue');
 
     const options = {
         animationEnabled: true,
@@ -74,7 +87,7 @@ export default function Chart(props) {
         height: 400,
         theme: "light2", // "light1", "dark1", "dark2"
         title:{
-            text: "Hit Rate",
+            text: "Forecast",
             fontFamily: "roboto",
             fontWeight: "300",
             fontSize: "28",
@@ -82,12 +95,12 @@ export default function Chart(props) {
             padding: "10",
         },
         axisY: {
-            title: "Percentage (%)",
+            title: "Dollar ($)",
             titleFontFamily: "roboto",
             labelFontFamily: "roboto",
 
             //includeZero: false,
-            suffix: " %" //+ "2".sup(),
+            prefix: "$"
         },
         axisX: {
             title: "Month",
@@ -105,8 +118,6 @@ export default function Chart(props) {
 				for (var i = 0; i < e.entries.length; i++) {
                     content += "<strong>" + months[e.entries[i].dataPoint.x.getMonth()] + "</strong><br/>";
                     content += e.entries[i].dataPoint.indexLabel + "<br/>";
-                    content += "Percentage: " + e.entries[i].dataPoint.y + "%";
-					content += "<br/>";
 				}
 				return content;
 			}
@@ -114,34 +125,18 @@ export default function Chart(props) {
 
         data: [{
             type: "line",
-            name: " Hit Rate by Projects",
-            color: "#fe6bd4",
+            name: " Quoted Hours ",
+            color: "#ee0290",
             indexLabelFontSize: 0,
-            dataPoints: myDataPoints
+            dataPoints: myQuotedDataPoints
         },
         {
             type: "line",
-            lineDashType: "dashDot",  
-            name: " Hit Rate by Projects Prediction ",
-            color: "#de6bfe",
+            name: " Actual Hours ",
+            color: "#ee6002",
             indexLabelFontSize: 0,
-            dataPoints: myPredictedDataPoints
-        },
-        {
-            type: "line",
-            name: " Hit Rate by Revenue",
-            color: "#6002ee",
-            indexLabelFontSize: 0,
-            dataPoints: myRevDataPoints
-        },
-        {
-            type: "line",
-            lineDashType: "dashDot",  
-            name: " Hit Rate by Revenue Prediction ",
-            color: "#90ee02",
-            indexLabelFontSize: 0,
-            dataPoints: myPredictedRevDataPoints
-        }],
+            dataPoints: myActualDataPoints
+        },]
         
     }
 
