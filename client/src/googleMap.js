@@ -20,17 +20,17 @@ Geocode.setApiKey(credentials.apiKey);
 //     }
 // );
 
-function getPositions(data) {
-    let res = [];
-    let d = data.slice(0,2);
-    console.log(d);
-    d.map((item) => {
-      res.push({lat: item.lat, lng: item.lng});
-    });
-    res.push( { lat: 25.782551, lng: -80.445368 });
-    console.log(res)
-    return res;
-}
+// function getPositions(data) {
+//     let res = [];
+//     let d = data.slice(0,2);
+//     console.log(d);
+//     d.map((item) => {
+//       res.push({lat: item.lat, lng: item.lng});
+//     });
+//     res.push( { lat: 25.782551, lng: -80.445368 });
+//     console.log(res)
+//     return res;
+// }
 
 const mapStyles = {
     width: '100%',
@@ -42,6 +42,7 @@ export class MapContainer extends Component {
     state = {
         userLocation: { lat: 43.513558, lng: -80.554540 },
         loading: true,
+        points: [],
     };
 
 
@@ -71,14 +72,14 @@ export class MapContainer extends Component {
         })
     }
 
-    // getPositions = () => {
-    //     let res = [];
-    //     this.props.data.map((item) => {
-    //       res.push({lat: item.lat, lng: item.lng});
-    //     });
-    //     //alert(JSON.stringify(res))
-    //     return res;
-    // }
+    getPositions = () => {
+        let res = [];
+        this.props.data.map((item) => {
+          res.push({lat: item.lat, lng: item.lng});
+        });
+        //alert(JSON.stringify(res))
+        return res;
+    }
 
     render() {
         const gradient = [
@@ -117,8 +118,8 @@ export class MapContainer extends Component {
             // { lat: 25.784147, lng: -80.439668 }
         ];
 
-        const p = getPositions(this.props.data);
-        console.log(p)
+        //const p = getPositions(this.props.data);
+        //console.log(p)
 
         const { loading, userLocation } = this.state;
         if (loading) {
@@ -140,16 +141,16 @@ export class MapContainer extends Component {
                     {/* {this.displayMarkers()} */}
                     <HeatMap
                         //google={this.props.google}
-                        foo={console.log(p.slice(0,2))}
-                        positions={p.slice(0,2)}
+                        //foo={console.log(p.slice(0,2))}
+                        positions={this.props.data}
                         radius={20}
                         opcatiy={1}
                         gradient = {gradient}
                         
                     />
                 </Map>
-                {JSON.stringify(p)}
-                {JSON.stringify(positions)}
+                {JSON.stringify(this.props.data)}
+                {/* {JSON.stringify(positions)} */}
             </div>
 
         );

@@ -124,8 +124,19 @@ export default function CompanyData() {
         //   .then((res) => createMapData(res.data.data));
 
         axios.get(API + '/getLatLngData')
-          .then((res) => setLatLngData(res.data.data));
+          .then((res) => createLatLngData(res.data.data));
 	};
+
+    function createLatLngData(data) {
+        var points = [];
+        var length = data.length;
+        for (let i = 0; i < 10; i++ ) {
+            let item = data[i];
+
+            points.push({lat: item.lat, lng: item.lng});
+        }
+        setLatLngData(points);
+    }
 
     function createMapData(data) {
         var points = [];
