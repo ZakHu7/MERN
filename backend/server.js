@@ -15,6 +15,7 @@ const BillableData = require('./billableData');
 const HitRateData = require('./hitRateData');
 const HitRateRevData = require('./hitRateRevData');
 const MapData = require('./mapData');
+const LatLngData = require('./latLngData');
 
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
@@ -647,7 +648,12 @@ router.post('/initializeMapData', (req, res) => {
   var queryString = `
 SELECT
   [ProjectCode]
-  ,[ProjectStreet]
+  ,(CASE
+		WHEN [ProjectStreet] LIKE '%&%'
+			THEN NULL
+		ELSE
+			[ProjectStreet]
+	END)
   ,[ProjectCity]
   ,[ProjectState]
   ,[ProjectZip]
@@ -679,7 +685,8 @@ ORDER BY ProjectCode DESC
         data.projectCode = item.ProjectCode;
         data.projectStreet = item.ProjectStreet;
         data.projectCity = item.ProjectCity;
-        data.projectState = item.ProjectState == null ?  "Ontario" : item.projectState;
+
+        data.projectState = item.ProjectState;
         data.projectZip = item.ProjectZip;
 
 
@@ -702,8 +709,40 @@ router.get('/getMapData', (req, res) => {
   }).sort( { id: 1 } );
 });
 
+/// Save info grom geocode so it doesn't reach the quota
+router.post('/saveLatLngData', (req, res) => {
+  db.db.dropCollection('latlngdatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  //console.log(JSON.stringify(req.body));
+
+  const { data } = req.body;
 
 
+
+  data.forEach(function (item, i) {
+    let data = new LatLngData();
+    data.id = i;
+    data.projectCode = item.projectCode;
+    data.lat = item.latitude;
+    data.lng = item.longitude;
+
+    data.save();
+  })
+
+});
+
+// Get method for hitratedata
+router.get('/getLatLngData', (req, res) => {
+
+  const query = {};
+  const { id, update } = req.body;
+  //console.log(req);
+  //console.log(req.query.projectSize);
+  LatLngData.find(query, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  }).sort( { id: 1 } );
+});
 // append /api for our http requests
 app.use('/api', router);
 

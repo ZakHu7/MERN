@@ -3,17 +3,15 @@ import React from 'react';
 import { CanvasJSChart} from './canvasjs.react';
 import { getContrastRatio } from '@material-ui/core/styles';
 
-
+// Used to convert numbers into months
 var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-
 
 // Convert data into useable data for the chart
 function getDataPoints(data, type) {
     var res = [];
 
-    //alert(JSON.stringify(data[0]))
-    //alert(data["percentages"] == undefined);
+    // Disregards the cases where the data is null
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
@@ -41,7 +39,7 @@ function getPredictedDataPoints(data, type) {
     var date = new Date();
     var currentYear = date.getFullYear();
     var predicted = new Array(12).fill(0);
-    // Get the hit rate percentage from total received and total quoted
+    // Get the hit rate percentage from total received and total quoted for the past 4 years, not including the current year
     data.forEach((item) => {
         if (item.year != currentYear) {
             let p = item.received / item.total * 100;

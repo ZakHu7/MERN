@@ -41,6 +41,11 @@ const useStyles = makeStyles(theme => ({
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         margin: "auto",
         color: "white",
+    },
+    button2: {
+        background: 'linear-gradient(45deg, #fe6bd4 30%, #fe6b8b 90%)',
+        margin: "auto",
+        color: "white",
     }
 }));
 
@@ -71,6 +76,8 @@ function initializeAllData(){
     });
 }
 
+
+
 export default function CompanyData() {
     const classes = useStyles();
 
@@ -84,15 +91,22 @@ export default function CompanyData() {
     const [hitRateRevData, setHitRateRevData] = React.useState({});
 
     const [mapData, setMapData] = React.useState([]);
+    const [latLngData, setLatLngData] = React.useState([]);
 
     
     useEffect(() => {
 		getDataFromDb();
-	}, []);
+    }, []);
+    
+    function saveAllData(){
+        axios.post(API + '/saveLatLngData', {
+            id: 0,
+            data: mapData,
+        });
+    }
 
     function getDataFromDb(){
         axios.get(API + '/getEmployeeData')
-          //.then((res) => alert(JSON.stringify(res.data.data)))
           .then((res) => handleEmployeeDataChange(res.data.data));
         axios.get(API + '/getAnnualRevenueData')
           .then((res) => setAnnualRevenueData(res.data.data));
@@ -106,53 +120,68 @@ export default function CompanyData() {
         axios.get(API + '/getHitRateRevData')
           .then((res) => setHitRateRevData(res.data.data));
 
-        axios.get(API + '/getMapData')
-          .then((res) => createMapData(res.data.data));
+        // axios.get(API + '/getMapData')
+        //   .then((res) => createMapData(res.data.data));
+
+        axios.get(API + '/getLatLngData')
+          .then((res) => setLatLngData(res.data.data));
 	};
 
     function createMapData(data) {
         var points = [];
         var length = data.length;
-        var offset = 0;
         for (let i = 0; i < length; i++ ) {
             let item = data[i];
-            //alert(i);
-            // if (item.projectCity == null || item.projectState == null) {
-            //     offset++;
+            let addressArr = [];
+            if (item.projectStreet != null) {
+                addressArr.push(item.projectStreet);
+            }
+            if (item.projectCity != null) {
+                addressArr.push(item.projectCity);
+            }
+            if (item.projectState != null) {
+                addressArr.push(item.projectState);
+            } else {
+                addressArr.push("Ontario, Canada");
+            }
+            if (item.projectZip != null) {
+                addressArr.push(item.projectZip);
+            }
+
+            var address = addressArr.join(", ");
+            // if (item.projectCity != "St. Thomas ") {
             //     continue;
-            // };
-            
-            //alert(item.projectCity);
-            var address = item.projectStreet + " " + item.projectCity + " " + item.projectState + " " + item.projectZip;
+            // }
+            //alert(address);
             Geocode.fromAddress(address).then(
                 response => {
                     const { lat, lng } = response.results[0].geometry.location;
-                    //alert(JSON.stringify({lat, lng}));
-                    //var points = mapData.slice();
-                    points.push({latitude: lat, longitude: lng});
-                    //alert(JSON.stringify(points));
+
+                    points.push(
+                        {projectCode: item.projectCode,
+                         city: item.projectCity,
+                         province: item.projectState,
+                         latitude: lat,
+                         longitude: lng,
+                        });
+                    // if(item.projectCode == "18-179") {
+                    //     setMapData(points);
+                    // }
                     if(i == length - 1) {
-                        //alert(offset);
                         setMapData(points);
-
                     }
-                    //alert(JSON.stringify(mapData));
-
                 },
                 error => {
                     console.error(error);
                 }
             );
-
         }
-        //alert(JSON.stringify(points));
-        //setMapData(points);
     }
 
-    function handleStateChange(setState, value) {
-        //alert(Array.isArray(value));
-        setState(value);
-    }
+    // function handleStateChange(setState, value) {
+    //     //alert(Array.isArray(value));
+    //     setState(value);
+    // }
 
     function handleEmployeeDataChange(value) {
 
@@ -180,7 +209,6 @@ export default function CompanyData() {
                 notBillable: [],
             });
         }
-        //alert(JSON.stringify(employeeArr));
         setEmployeeData(employeeArr);
 
         setEmployeeChartData(employeePieData);
@@ -192,14 +220,14 @@ export default function CompanyData() {
              <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {/* {JSON.stringify(mapData)} */}
+                        {JSON.stringify(mapData)}
                         <GoogleMap 
-                            data = {mapData}
+                            data = {latLngData}
                         />
                         <Button
-                            className={classes.button}
+                            className={classes.button2}
                             variant="contained"
-                            //onClick={() => initializeAllData()}
+                            onClick={() => saveAllData()}
                         >
                             Save Points
                         </Button>
