@@ -19,7 +19,7 @@ function getPoints(revenueData, employeeData, type) {
     //console.log(JSON.stringify(revenueData));
     //alert(JSON.stringify(data[0]))
     //alert(data["percentages"] == undefined);
-    if (revenueData == undefined || Object.keys(revenueData).length == 0 || revenueData[0] == undefined) {
+    if (revenueData === undefined ) {
         return null;
     }
 

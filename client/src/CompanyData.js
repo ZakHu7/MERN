@@ -103,7 +103,7 @@ export default function CompanyData() {
         });
     }
     
-    async function initializeAllData(){
+    function initializeAllData(){
         setLoadingData(true);
 
         axios.post(API + '/initializeEmployeeData', {
@@ -276,7 +276,7 @@ export default function CompanyData() {
              <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {JSON.stringify(mapData)}
+                        {/* {JSON.stringify(mapData)} */}
                         <GoogleMap 
                             data = {latLngData}
                             //wait = {5000}

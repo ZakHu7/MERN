@@ -3,6 +3,8 @@ import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
 
 
+var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
 
 // Convert data into useable data for the chart
@@ -17,7 +19,7 @@ function getDataPoints(data) {
     for (var i = 0; i < 12; i++ ) {
         //alert(data[0].percentages[i])
         let p = data[0].percentages[i] == null ? null : Math.round( data[0].percentages[i] );
-        res.push({ x: i, y: p });
+        res.push({ x: months[i], y: p });
     }
 
     //alert(res);
@@ -42,7 +44,7 @@ function getAvgDataPoints(data) {
     if (dataCount != 0) {
         let p = Math.round(total/dataCount);
         for (let i = 0; i < 12; i++ ) {
-            res.push({ x: i, y: dataCount <= i ? null : p});
+            res.push({ x: months[i], y: dataCount <= i ? null : p});
         }
     }
     return res;
@@ -60,11 +62,11 @@ export default function MyResponsiveLine(props) {
     var myAvgDataPoints = getAvgDataPoints(props.data);
     let data = [{
             id: "Average",
-            data: myDataPoints
+            data: myAvgDataPoints
         },
         {
             id: "Company",
-            data: myAvgDataPoints
+            data: myDataPoints
         }]
     
     if( myAvgDataPoints == null){
@@ -77,7 +79,7 @@ export default function MyResponsiveLine(props) {
             data={data}
             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
             xScale={{ type: 'point' }}
-            yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
+            yScale={{ type: 'linear', stacked: false, min: '0', max: 'auto' }}
             curve="natural"
             axisTop={null}
             axisRight={null}
@@ -86,7 +88,7 @@ export default function MyResponsiveLine(props) {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'transportation',
+                legend: 'Month',
                 legendOffset: 36,
                 legendPosition: 'middle'
             }}
@@ -95,7 +97,7 @@ export default function MyResponsiveLine(props) {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'count',
+                legend: 'Percentage',
                 legendOffset: -40,
                 legendPosition: 'middle'
             }}
@@ -108,7 +110,7 @@ export default function MyResponsiveLine(props) {
             pointLabel="y"
             pointLabelYOffset={-12}
             enableArea={true}
-            areaOpacity={0.15}
+            areaOpacity={0.05}
             crosshairType="cross"
             useMesh={true}
             //debugMesh={true}

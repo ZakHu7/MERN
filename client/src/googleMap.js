@@ -104,6 +104,7 @@ export class MapContainer extends Component {
     }
 
     render() {
+        // Color for the HeatMap
         const gradient = [
             'rgba(0, 255, 255, 0)',
             'rgba(0, 255, 255, 1)',
@@ -121,6 +122,7 @@ export class MapContainer extends Component {
             'rgba(255, 0, 0, 1)'
         ];
         
+        // Testing with static data
         const positions = [
             {"lat":43.4642578,"lng":-80.5204096},{"lat":43.093452,"lng":-82.00256259999999},
             { lat: 25.782551, lng: -80.445368 },
@@ -170,30 +172,9 @@ export class MapContainer extends Component {
                         opcatiy={1}
                         gradient = {gradient}
                         
-                    />
-                    <HeatMap
-                        positions={this.props.data.slice(100,200)}
-                        radius={20}
-                        opcatiy={1}
-                        gradient = {gradient}
-                        
-                    />
-                    <HeatMap
-                        positions={this.props.data.slice(200,300)}
-                        radius={20}
-                        opcatiy={1}
-                        gradient = {gradient}
-                        
-                    />
-                    <HeatMap
-                        positions={this.props.data.slice(300,400)}
-                        radius={20}
-                        opcatiy={1}
-                        gradient = {gradient}
-                        
                     /> */}
                 </Map>
-                {JSON.stringify(this.props.data.length)}
+                {/* {JSON.stringify(this.props.data.length)} */}
                 {/* {JSON.stringify(positions)} */}
             </div>
 
