@@ -16,7 +16,7 @@ function getOrderedData(revenueData) {
 // Convert data into useable data for the chart
 function getPoints(revenueData, employeeData, type) {
     var res = [];
-
+    //console.log(JSON.stringify(revenueData));
     //alert(JSON.stringify(data[0]))
     //alert(data["percentages"] == undefined);
     if (revenueData == undefined || Object.keys(revenueData).length == 0 || revenueData[0] == undefined) {
@@ -26,7 +26,7 @@ function getPoints(revenueData, employeeData, type) {
     var size = revenueData.length;
     for(var i = 0; i < size; i++) {
         let element = revenueData[i];
-        if (element.year != null && element.revenue != null) {
+        if (element !== undefined && element.year != null && element.revenue != null) {
             res.push({ x: element.year, y: Math.round( element.revenue / employeeData[type] )});
         }
     }

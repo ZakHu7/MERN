@@ -40,36 +40,58 @@ const mapStyles = {
 
 export class MapContainer extends Component {
     state = {
-        userLocation: { lat: 43.513558, lng: -80.554540 },
+        userLocation: { lat: 43.5053421, lng: -80.55494519999999 },
+        intervalIsSet: false,
         loading: true,
         points: [],
+        // hidden: "hidden",
     };
 
 
-    componentDidMount(props) {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                const { latitude, longitude } = position.coords;
+    componentDidMount() {
 
-                this.setState({
-                    userLocation: { lat: latitude, lng: longitude },
-                    loading: false
-                });
-            },
-            () => {
-                this.setState({ loading: false });
-            }
-        );
+        //console.log(this.state.loading);
+        if (!this.state.intervalIsSet) {
+
+            // The heatmap does not work unless the props are fully loaded in.
+            // This updates the map when the props are fully loaded in so heatmaps work
+            let interval = setInterval(() => {
+                //console.log(this.props.data);
+                if (this.props.data !== undefined && this.props.data.length != 0) {
+                    this.setState({loading: false});
+                    clearInterval(interval);
+                }
+            }, 1000);
+            
+        }
     }
 
+    
     displayMarkers = () => {
         return this.props.data.map((item, index) => {
           return <Marker key={index} id={index} position={{
-           lat: item.latitude,
-           lng: item.longitude
-         }}
-         onClick={() => console.log(item.projectCode)} />
+           lat: item.lat,
+           lng: item.lng,
+         }}/>
         })
+    }
+
+    displayHeatMap = (gradient) => {
+        let length = this.props.data.length;
+        let res = [];
+        for (let i = 0; i < length; i+=50 ) {
+            
+            res.push(<HeatMap
+                key={i}
+                positions={this.props.data.slice(i, i+50)}
+                radius={20}
+                opcatiy={1}
+                gradient = {gradient}
+            
+            />)
+        }
+
+        return res;
     }
 
     getPositions = () => {
@@ -100,6 +122,7 @@ export class MapContainer extends Component {
         ];
         
         const positions = [
+            {"lat":43.4642578,"lng":-80.5204096},{"lat":43.093452,"lng":-82.00256259999999},
             { lat: 25.782551, lng: -80.445368 },
             { lat: 25.782745, lng: -80.444586 },
             // { lat: 25.782842, lng: -80.443688 },
@@ -126,7 +149,7 @@ export class MapContainer extends Component {
             return null;
         }
         return (
-            <div id="mapBox">
+            <div id="mapBox" className={this.state.hidden}>
 
                 <Map
                     google={this.props.google}
@@ -139,17 +162,38 @@ export class MapContainer extends Component {
                         position={userLocation}
                     /> */}
                     {/* {this.displayMarkers()} */}
-                    <HeatMap
-                        //google={this.props.google}
-                        //foo={console.log(p.slice(0,2))}
-                        positions={this.props.data}
+                    {this.displayHeatMap(gradient)}
+
+                    {/* <HeatMap
+                        positions={this.props.data.slice(0,100)}
                         radius={20}
                         opcatiy={1}
                         gradient = {gradient}
                         
                     />
+                    <HeatMap
+                        positions={this.props.data.slice(100,200)}
+                        radius={20}
+                        opcatiy={1}
+                        gradient = {gradient}
+                        
+                    />
+                    <HeatMap
+                        positions={this.props.data.slice(200,300)}
+                        radius={20}
+                        opcatiy={1}
+                        gradient = {gradient}
+                        
+                    />
+                    <HeatMap
+                        positions={this.props.data.slice(300,400)}
+                        radius={20}
+                        opcatiy={1}
+                        gradient = {gradient}
+                        
+                    /> */}
                 </Map>
-                {JSON.stringify(this.props.data)}
+                {JSON.stringify(this.props.data.length)}
                 {/* {JSON.stringify(positions)} */}
             </div>
 

@@ -1,3 +1,6 @@
 #mapBox div:first-child {
     position: relative !important;
 }
+.hidden {
+	display: none;
+}

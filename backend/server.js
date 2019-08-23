@@ -158,23 +158,42 @@ router.post('/putData', (req, res) => {
 /// Retrieves info about employees and pushes to employeedatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeEmployeeData', (req, res) => {
-  db.db.dropCollection('employeedatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
+  const queryString = `
+  SELECT
+    EmployeeID,
+    EmpFName,
+    EmpLName,
+    EmpTitle
+    FROM Rombald2018.dbo.Employee
+  WHERE 
+    Status = 'active'
+    AND EmpTitle IS NOT NULL`;
   // query to the database and get the records
-  request.query("SELECT EmployeeID, EmpFName, EmpLName, EmpTitle FROM Employee WHERE Status = 'active' AND EmpTitle IS NOT NULL", function (err, recordset) {
-      var i = 0;
-      recordset.recordsets[0].forEach(function (item) {
-        let data = new EmployeeData();
-        data.id = i++;
-        data.employeeID = item.EmployeeID;
-        data.name = item.EmpFName + " " + item.EmpLName;
-        data.empTitle = item.EmpTitle;
-        data.save();
-      })
-      if (err) console.log(err);
+  request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('employeedatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("employee worked");
+    }
+    var i = 0;
+    recordset.recordsets[0].forEach(function (item) {
+      let data = new EmployeeData();
+      data.id = i++;
+      data.employeeID = item.EmployeeID;
+      data.name = item.EmpFName + " " + item.EmpLName;
+      data.empTitle = item.EmpTitle;
+      data.save();
+    })
+      
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for employeeData
@@ -194,7 +213,6 @@ router.get('/getEmployeeData', (req, res) => {
 /// Retrieves info about employees and pushes to annualrevenuedatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeAnnualRevenueData', (req, res) => {
-  db.db.dropCollection('annualrevenuedatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -210,6 +228,13 @@ router.post('/initializeAnnualRevenueData', (req, res) => {
   ORDER BY Years DESC`;
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('annualrevenuedatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("annualrev worked");
+    }
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new AnnualRevenueData();
@@ -221,6 +246,9 @@ router.post('/initializeAnnualRevenueData', (req, res) => {
       })
       if (err) console.log(err);
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for annualRevenueData
@@ -240,7 +268,6 @@ router.get('/getAnnualRevenueData', (req, res) => {
 /// Retrieves info about employees and pushes to actualquoteddatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeActualQuotedData', (req, res) => {
-  db.db.dropCollection('actualquoteddatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -324,6 +351,13 @@ router.post('/initializeActualQuotedData', (req, res) => {
   //console.log(queryString);
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('actualquoteddatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("actualvsquoted worked");
+    }
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new ActualQuotedData();
@@ -336,6 +370,9 @@ router.post('/initializeActualQuotedData', (req, res) => {
       })
       if (err) console.log(err);
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for actualQuotedData
@@ -355,7 +392,6 @@ router.get('/getActualQuotedData', (req, res) => {
 /// Retrieves info about employees and pushes to billabledatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeBillableData', (req, res) => {
-  db.db.dropCollection('billabledatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -376,7 +412,7 @@ SELECT
 FROM [Rombald2018].[dbo].[TimeEntry]
 WHERE ActivityId NOT IN ('060 General:1.1', '060 General:1.2', '060 General:1.4', '060 General:1.5')
 ) AS Tmp
-WHERE [Year] = '2019'
+WHERE [Year] = --#year#
 GROUP BY EmployeeID, [Year], [Month], [TEBill]
 ORDER BY [YEAR] DESC, [MONTH], EmployeeID
 `;
@@ -388,6 +424,13 @@ ORDER BY [YEAR] DESC, [MONTH], EmployeeID
   //console.log(queryString);
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('billabledatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("billable worked");
+    }
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new BillableData();
@@ -404,6 +447,9 @@ ORDER BY [YEAR] DESC, [MONTH], EmployeeID
       })
       if (err) console.log(err);
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for billableData
@@ -424,7 +470,6 @@ router.get('/getBillableData', (req, res) => {
 /// Retrieves info about employees and pushes to hitratedatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeHitRateData', (req, res) => {
-  db.db.dropCollection('hitratedatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -498,6 +543,13 @@ ORDER BY A.[Year] DESC, A.[Month];
   //console.log(queryString);
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('hitratedatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("hitrate worked");
+    }
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new HitRateData();
@@ -511,6 +563,9 @@ ORDER BY A.[Year] DESC, A.[Month];
       })
       if (err) console.log(err);
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for hitratedata
@@ -531,7 +586,6 @@ router.get('/getHitRateData', (req, res) => {
 /// Retrieves info about employees and pushes to hitraterevdatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeHitRateRevData', (req, res) => {
-  db.db.dropCollection('hitraterevdatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -608,6 +662,13 @@ router.post('/initializeHitRateRevData', (req, res) => {
   //console.log(queryString);
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      db.db.dropCollection('hitraterevdatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("hitraterev worked");
+    }
       var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new HitRateRevData();
@@ -621,6 +682,9 @@ router.post('/initializeHitRateRevData', (req, res) => {
       })
       if (err) console.log(err);
   });
+
+  return res.json({ success: true});
+
 });
 
 // Get method for hitratedata
@@ -641,7 +705,6 @@ router.get('/getHitRateRevData', (req, res) => {
 /// Retrieves info about employees and pushes to hitratedatas
 /// Note: this deletes what is currently in the cloud DB and pushes a new selection instead
 router.post('/initializeMapData', (req, res) => {
-  db.db.dropCollection('mapdatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
   
@@ -653,7 +716,7 @@ SELECT
 			THEN NULL
 		ELSE
 			[ProjectStreet]
-	END)
+	END) AS 'ProjectStreet'
   ,[ProjectCity]
   ,[ProjectState]
   ,[ProjectZip]
@@ -678,8 +741,17 @@ ORDER BY ProjectCode DESC
   //console.log(queryString);
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
-      var i = 0;
-      recordset.recordsets[0].forEach(function (item) {
+    if (err) {
+      console.log(err);
+    } else {
+      db.db.dropCollection('mapdatas', function(err, result) {if (err) console.log('could not delete collection')});
+      console.log("map worked");
+    }
+    var i = 0;
+    recordset.recordsets[0].forEach(function (item) {
+      let allNull = item.ProjectStreet || item.ProjectCity || item.ProjectState || item.ProjectZip;
+      //console.log(item.ProjectCode + ": " + allNull)
+      if (allNull) {
         let data = new MapData();
         data.id = i++;
         data.projectCode = item.ProjectCode;
@@ -691,8 +763,9 @@ ORDER BY ProjectCode DESC
 
 
         data.save();
-      })
-      if (err) console.log(err);
+      }
+    })
+    return res.json({ success: true});
   });
 });
 
@@ -711,12 +784,14 @@ router.get('/getMapData', (req, res) => {
 
 /// Save info grom geocode so it doesn't reach the quota
 router.post('/saveLatLngData', (req, res) => {
-  db.db.dropCollection('latlngdatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   //console.log(JSON.stringify(req.body));
 
   const { data } = req.body;
-
+  if(data === undefined || data === null) {
+    return res.json({ success: false});
+  }
+  db.db.dropCollection('latlngdatas', function(err, result) {if (err) console.log('could not delete collection')});
 
 
   data.forEach(function (item, i) {
@@ -728,6 +803,7 @@ router.post('/saveLatLngData', (req, res) => {
 
     data.save();
   })
+  return res.json({ success: true});
 
 });
 

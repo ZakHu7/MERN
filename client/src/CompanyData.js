@@ -17,6 +17,9 @@ import RevenueBenchmarksChart from './charts/RevenueBenchmarksChart';
 import HitRateChart from './charts/HitRateChart';
 import ForecastChart from './charts/ForecastChart';
 
+import NivoLineChart from './charts/NivoLineChart';
+
+
 import GoogleMap from './googleMap';
 
 
@@ -44,42 +47,27 @@ const useStyles = makeStyles(theme => ({
     },
     button2: {
         background: 'linear-gradient(45deg, #fe6bd4 30%, #fe6b8b 90%)',
-        margin: "auto",
+        margin: "10px",
+        paddingTop: 10,
         color: "white",
+    },
+    button3: {
+        background: 'linear-gradient(45deg, #fe6b8b 30%, #fe6bd4 90%)',
+        margin: "10px",
+        paddingTop: 10,
+        color: "white",
+    },
+    height: {
+        height: "500px",
     }
 }));
 
-function initializeAllData(){
-    axios.post(API + '/initializeEmployeeData', {
-        id: 0,
-    });
-    axios.post(API + '/initializeAnnualRevenueData', {
-        id: 0,
-    });
-
-    axios.post(API + '/initializeActualQuotedData', {
-      id: 0,
-    });
-    axios.post(API + '/initializeBillableData', {
-        id: 0,
-    });
-    axios.post(API + '/initializeHitRateData', {
-        id: 0,
-    });
-    axios.post(API + '/initializeHitRateRevData', {
-        id: 0,
-    });
-
-
-    axios.post(API + '/initializeMapData', {
-        id: 0,
-    });
-}
 
 
 
 export default function CompanyData() {
     const classes = useStyles();
+    const [loadingData, setLoadingData] = React.useState(false);
 
     const [employeeData, setEmployeeData] = React.useState([]);
 
@@ -95,42 +83,99 @@ export default function CompanyData() {
 
     
     useEffect(() => {
-		getDataFromDb();
-    }, []);
-    
-    function saveAllData(){
-        axios.post(API + '/saveLatLngData', {
+        getDataFromDb();
+        setLoadingData(false);
+    }, [loadingData]);
+
+    useEffect(() => {
+        //alert(JSON.stringify(mapData.length != 0));
+        if (mapData.length != 0) {
+            console.log(mapData);
+            fetchLatLngData();
+        }
+    }, [mapData]);
+
+    async function fetchLatLngData() {
+        //alert('hi');
+        await axios.post(API + '/saveLatLngData', {
             id: 0,
             data: mapData,
         });
     }
+    
+    async function initializeAllData(){
+        setLoadingData(true);
 
-    function getDataFromDb(){
-        axios.get(API + '/getEmployeeData')
-          .then((res) => handleEmployeeDataChange(res.data.data));
-        axios.get(API + '/getAnnualRevenueData')
-          .then((res) => setAnnualRevenueData(res.data.data));
+        axios.post(API + '/initializeEmployeeData', {
+            id: 0,
+        });
+        axios.post(API + '/initializeAnnualRevenueData', {
+            id: 0,
+        });
 
-        axios.get(API + '/getActualQuotedData')
-          .then((res) => setActualQuotedData(res.data.data));
-		axios.get(API + '/getBillableData')
-          .then((res) => setBillableData(res.data.data));
-        axios.get(API + '/getHitRateData')
-          .then((res) => setHitRateData(res.data.data));
-        axios.get(API + '/getHitRateRevData')
-          .then((res) => setHitRateRevData(res.data.data));
+        axios.post(API + '/initializeActualQuotedData', {
+        id: 0,
+        });
+        axios.post(API + '/initializeBillableData', {
+            id: 0,
+        });
+        axios.post(API + '/initializeHitRateData', {
+            id: 0,
+        });
+        axios.post(API + '/initializeHitRateRevData', {
+            id: 0,
+        });
 
-        // axios.get(API + '/getMapData')
-        //   .then((res) => createMapData(res.data.data));
 
-        axios.get(API + '/getLatLngData')
-          .then((res) => createLatLngData(res.data.data));
-	};
+        axios.post(API + '/initializeMapData', {
+            id: 0,
+        });
+
+        //await alert('hi');
+    }
+    
+    async function getMapData(){
+        setLoadingData(true);
+        const mapRes = await axios.get(API + '/getMapData')
+        await createMapData(mapRes.data.data);
+        //console.log(mapData);
+
+    }
+
+    async function getDataFromDb(){
+        //alert(loadingData);
+
+        const empRes = await axios.get(API + '/getEmployeeData');
+        //alert(JSON.stringify(empRes.data.data));
+        handleEmployeeDataChange(empRes.data.data);
+
+
+        const annRevRes = await axios.get(API + '/getAnnualRevenueData');
+        setAnnualRevenueData(annRevRes.data.data);
+
+        const actQuoRes = await axios.get(API + '/getActualQuotedData');
+        setActualQuotedData(actQuoRes.data.data);
+        const billRes = await axios.get(API + '/getBillableData');
+        setBillableData(billRes.data.data);
+        const hitRateRes = await axios.get(API + '/getHitRateData');
+        setHitRateData(hitRateRes.data.data);
+        const hitRateRevRes = await axios.get(API + '/getHitRateRevData');
+        setHitRateRevData(hitRateRevRes.data.data);
+
+
+        const latLngRes = await axios.get(API + '/getLatLngData');
+        createLatLngData(latLngRes.data.data);
+    };
+    
+
 
     function createLatLngData(data) {
         var points = [];
+        if (data === undefined) {
+            return;
+        }
         var length = data.length;
-        for (let i = 0; i < 10; i++ ) {
+        for (let i = 0; i < length; i++ ) {
             let item = data[i];
 
             points.push({lat: item.lat, lng: item.lng});
@@ -234,15 +279,26 @@ export default function CompanyData() {
                         {JSON.stringify(mapData)}
                         <GoogleMap 
                             data = {latLngData}
+                            //wait = {5000}
                         />
                         <Button
                             className={classes.button2}
                             variant="contained"
-                            onClick={() => saveAllData()}
+                            onClick={() => getMapData()}
                         >
-                            Save Points
+                            Get Map Data
                         </Button>
                         {/* {JSON.stringify(mapData)} */}
+                    </Paper>
+                </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Paper className={[classes.paper, classes.height].join(" ")}>
+                        <NivoLineChart 
+                            data={actualQuotedData}
+                            //foo = {console.log(actualQuotedData)}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
