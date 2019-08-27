@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const DataSchema = new Schema(
   {
     id: Number,
+    name: String,
     percentages: Array,
     // jan: Number,
     // feb: Number,

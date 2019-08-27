@@ -15,9 +15,17 @@ function getDataPoints(data) {
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
+
+    var companyStats = [];
+    data.forEach(item => {
+        if (item.name == "Company") {
+            companyStats = item.percentages;
+        }
+    })
+
     for (var i = 0; i < 12; i++ ) {
         //alert(data[0].percentages[i])
-        let p = data[0].percentages[i] == null ? null : Math.round( data[0].percentages[i] );
+        let p = companyStats[i] == null ? null : Math.round( companyStats[i] );
         res.push({ x: new Date(2019, i), y: p });
     }
 
@@ -31,10 +39,16 @@ function getAvgDataPoints(data) {
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
+    var companyStats = [];
+    data.forEach(item => {
+        if (item.name == "Company") {
+            companyStats = item.percentages;
+        }
+    })
     var dataCount = 0;
     var total = 0;
     for (let i = 0; i < 12; i++ ) {
-        let monthData = data[0].percentages[i];
+        let monthData = companyStats[i];
         if (monthData != null) {
             dataCount++;
             total += Math.round(monthData);

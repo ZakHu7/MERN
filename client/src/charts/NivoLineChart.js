@@ -8,7 +8,7 @@ var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 
 // Convert data into useable data for the chart
-function getDataPoints(data) {
+function getCompanyDataPoints(data) {
     var res = [];
 
     //alert(JSON.stringify(data[0]))
@@ -16,9 +16,15 @@ function getDataPoints(data) {
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
+    var companyStats = [];
+    data.forEach(item => {
+        if (item.name == "Company") {
+            companyStats = item.percentages;
+        }
+    })
     for (var i = 0; i < 12; i++ ) {
         //alert(data[0].percentages[i])
-        let p = data[0].percentages[i] == null ? null : Math.round( data[0].percentages[i] );
+        let p = companyStats[i] == null ? null : Math.round( companyStats[i] );
         res.push({ x: months[i], y: p });
     }
 
@@ -27,15 +33,21 @@ function getDataPoints(data) {
 }
 
 // Get average of company stats
-function getAvgDataPoints(data) {
+function getCompanyAvgDataPoints(data) {
     var res = [];
     if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined) {
         return null;
     }
+    var companyStats = [];
+    data.forEach(item => {
+        if (item.name == "Company") {
+            companyStats = item.percentages;
+        }
+    })
     var dataCount = 0;
     var total = 0;
     for (let i = 0; i < 12; i++ ) {
-        let monthData = data[0].percentages[i];
+        let monthData = companyStats[i];
         if (monthData != null) {
             dataCount++;
             total += Math.round(monthData);
@@ -50,7 +62,36 @@ function getAvgDataPoints(data) {
     return res;
 }
 
+// Create custom lines
+function createCustomLine(data, names) {
+    var res = [];
+    //alert(names);
 
+    if (data == undefined || Object.keys(data).length == 0 || data[0] == undefined 
+        || names == undefined || names.length == 0) {
+        return null;
+    }
+    var totalStats = new Array(12).fill(null);
+    var count = 0;
+    data.forEach(item => {
+        if (names.includes(item.name)) {
+            for (var i = 0; i < 12; i++ ) {
+                let p = item.percentages[i] == null ? null : Math.round( item.percentages[i] );
+                totalStats[i] += p;
+            }
+            count++;
+        }
+    })
+    if (count != 0) {
+        for (let i = 0; i < 12; i++ ) {
+            let p = Math.round(totalStats[i]/count);
+            res.push({ x: months[i], y: p == 0 ? null : p});
+        }
+    }
+
+    //alert(res);
+    return res;
+}
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
@@ -58,29 +99,67 @@ function getAvgDataPoints(data) {
 // website examples showcase many properties,
 // you'll often use just a few of them.
 export default function MyResponsiveLine(props) {
-    var myDataPoints = getDataPoints(props.data);
-    var myAvgDataPoints = getAvgDataPoints(props.data);
+    var companyDataPoints = getCompanyDataPoints(props.data);
+    var companyAvgDataPoints = getCompanyAvgDataPoints(props.data);
+    var customLine1 = createCustomLine(props.data, props.customLine1);
+    var customLine2 = createCustomLine(props.data, props.customLine2);
+    var customLine3 = createCustomLine(props.data, props.customLine3);
+    var customLine4 = createCustomLine(props.data, props.customLine4);
+    var customLine5 = createCustomLine(props.data, props.customLine5);
+    //alert(JSON.stringify(props.customLine1));
+
     let data = [{
             id: "Average",
-            data: myAvgDataPoints
+            data: companyAvgDataPoints
         },
         {
             id: "Company",
-            data: myDataPoints
-        }]
+            data: companyDataPoints
+        }
+    ]
     
-    if( myAvgDataPoints == null){
+    if (companyAvgDataPoints == null) {
         return null;
     }
+    if (customLine1 != null) {
+        data.push({
+            id: "Custom Line 1",
+            data: customLine1,
+        })
+    }
+    if (customLine2 != null) {
+        data.push({
+            id: "Custom Line 2",
+            data: customLine2,
+        })
+    }
+    if (customLine3 != null) {
+        data.push({
+            id: "Custom Line 3",
+            data: customLine3,
+        })
+    }
+    if (customLine4 != null) {
+        data.push({
+            id: "Custom Line 4",
+            data: customLine4,
+        })
+    }
+    if (customLine5 != null) {
+        data.push({
+            id: "Custom Line 5",
+            data: customLine5,
+        })
+    }
     //alert(JSON.stringify(myAvgDataPoints));
-    
+    //alert(null + 10);
     return (
         <ResponsiveLine
             data={data}
             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
             xScale={{ type: 'point' }}
-            yScale={{ type: 'linear', stacked: false, min: '0', max: 'auto' }}
-            curve="natural"
+            yScale={{ type: 'linear', min: 0, max: 'auto' }}
+            curve="cardinal"
             axisTop={null}
             axisRight={null}
             axisBottom={{
@@ -104,7 +183,7 @@ export default function MyResponsiveLine(props) {
             colors={{ scheme: 'nivo' }}
             lineWidth={4}
             pointSize={10}
-            pointColor={{ theme: 'background' }}
+            pointColor={{ from: 'color', modifiers: [] }}
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
             pointLabel="y"

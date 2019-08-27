@@ -206,7 +206,7 @@ router.get('/getEmployeeData', (req, res) => {
   EmployeeData.find(query, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
-  });
+  }).sort( { id: 1 } );
 });
 
 /// Getting information from the local database
@@ -271,85 +271,87 @@ router.post('/initializeActualQuotedData', (req, res) => {
   db.db.dropCollection('actualquoteddatas', function(err, result) {if (err) console.log('could not delete collection')});
 
   var request = new mssql.Request();
-  
-  var queryString = `
-  --Temporary table for what year is to be used
-  DECLARE @ChartTmp TABLE (
-      ProjectID NVARCHAR(65) NOT NULL,
-      ProjMonth INT,
-      PrimaryManager NVARCHAR(65),
-      SecondaryManager NVARCHAR(65),
-      ActualMonthlyTotal FLOAT,
-    ActualAmt FLOAT,
-    BillAmt FLOAT,
-    PercentageUsed FLOAT
-  );
-  
-  INSERT INTO @ChartTmp
-  SELECT ProjectID
-    ,ProjMonth
-    ,PrimaryManager
-    ,SecondaryManager
-    ,SUM(EntryAmt) AS ActualMonthlyTotal
-    ,ActualAmt
-    ,BillAmt
-    ,ActualAmt/BillAmt AS PercentageUsed
-  FROM Rombald2018.dbo.ProfitabilityChart1
-  WHERE 1=1 --#year# --#excluded#
-  GROUP BY ProjectID, PrimaryManager, SecondaryManager, ProjMonth, ActualAmt, BillAmt
-  ORDER BY ProjectID DESC
-  
-  --Temporary table for the pivot of 12 months
-  DECLARE @ChartTmp2 TABLE (
-      ProjectID NVARCHAR(65) NOT NULL,
-      PrimaryManager NVARCHAR(65),
-      SecondaryManager NVARCHAR(65),
-    ActualAmt FLOAT,
-    BillAmt FLOAT,
-    PercentageUsed FLOAT,
-    [12] FLOAT,
-    [11] FLOAT,
-    [10] FLOAT,
-    [9] FLOAT,
-    [8] FLOAT,
-    [7] FLOAT,
-    [6] FLOAT,
-    [5] FLOAT,
-    [4] FLOAT,
-    [3] FLOAT,
-    [2] FLOAT,
-    [1] FLOAT
-  );
-  
-  INSERT INTO @ChartTmp2
-  SELECT *
-  FROM @ChartTmp
-  PIVOT(SUM(ActualMonthlyTotal)
-        FOR ProjMonth IN ([12], [11], [10], [9], [8], [7], [6], [5], [4], [3], [2], [1])) PIV
-  ORDER BY ProjectID DESC
-  
-  
-  SELECT
-    ISNULL(SUM([1] * PercentageUsed) / SUM([1]) * 100, NULL) AS Percentage1
-    ,ISNULL(SUM([2] * PercentageUsed) / SUM([2]) * 100, NULL) AS Percentage2
-    ,ISNULL(SUM([3] * PercentageUsed) / SUM([3]) * 100, NULL) AS Percentage3
-    ,ISNULL(SUM([4] * PercentageUsed) / SUM([4]) * 100, NULL) AS Percentage4
-    ,ISNULL(SUM([5] * PercentageUsed) / SUM([5]) * 100, NULL) AS Percentage5
-    ,ISNULL(SUM([6] * PercentageUsed) / SUM([6]) * 100, NULL) AS Percentage6
-    ,ISNULL(SUM([7] * PercentageUsed) / SUM([7]) * 100, NULL) AS Percentage7
-    ,ISNULL(SUM([8] * PercentageUsed) / SUM([8]) * 100, NULL) AS Percentage8
-    ,ISNULL(SUM([9] * PercentageUsed) / SUM([9]) * 100, NULL) AS Percentage9
-    ,ISNULL(SUM([10] * PercentageUsed) / SUM([10]) * 100, NULL) AS Percentage10
-    ,ISNULL(SUM([11] * PercentageUsed) / SUM([11]) * 100, NULL) AS Percentage11
-    ,ISNULL(SUM([12] * PercentageUsed) / SUM([12]) * 100, NULL) AS Percentage12
-  FROM @ChartTmp2
-  WHERE 1=1 --#user#`;
 
+  const designers = req.body.designers;
+
+  var queryString = `
+    --Temporary table for what year is to be used
+    DECLARE @ChartTmp TABLE (
+        ProjectID NVARCHAR(65) NOT NULL,
+        ProjMonth INT,
+        PrimaryManager NVARCHAR(65),
+        SecondaryManager NVARCHAR(65),
+        ActualMonthlyTotal FLOAT,
+      ActualAmt FLOAT,
+      BillAmt FLOAT,
+      PercentageUsed FLOAT
+    );
+    
+    INSERT INTO @ChartTmp
+    SELECT ProjectID
+      ,ProjMonth
+      ,PrimaryManager
+      ,SecondaryManager
+      ,SUM(EntryAmt) AS ActualMonthlyTotal
+      ,ActualAmt
+      ,BillAmt
+      ,ActualAmt/BillAmt AS PercentageUsed
+    FROM Rombald2018.dbo.ProfitabilityChart1
+    WHERE 1=1 --#year# --#excluded#
+    GROUP BY ProjectID, PrimaryManager, SecondaryManager, ProjMonth, ActualAmt, BillAmt
+    ORDER BY ProjectID DESC
+    
+    --Temporary table for the pivot of 12 months
+    DECLARE @ChartTmp2 TABLE (
+        ProjectID NVARCHAR(65) NOT NULL,
+        PrimaryManager NVARCHAR(65),
+        SecondaryManager NVARCHAR(65),
+      ActualAmt FLOAT,
+      BillAmt FLOAT,
+      PercentageUsed FLOAT,
+      [12] FLOAT,
+      [11] FLOAT,
+      [10] FLOAT,
+      [9] FLOAT,
+      [8] FLOAT,
+      [7] FLOAT,
+      [6] FLOAT,
+      [5] FLOAT,
+      [4] FLOAT,
+      [3] FLOAT,
+      [2] FLOAT,
+      [1] FLOAT
+    );
+    
+    INSERT INTO @ChartTmp2
+    SELECT *
+    FROM @ChartTmp
+    PIVOT(SUM(ActualMonthlyTotal)
+          FOR ProjMonth IN ([12], [11], [10], [9], [8], [7], [6], [5], [4], [3], [2], [1])) PIV
+    ORDER BY ProjectID DESC
+    
+    
+    SELECT
+      ISNULL(SUM([1] * PercentageUsed) / SUM([1]) * 100, NULL) AS Percentage1
+      ,ISNULL(SUM([2] * PercentageUsed) / SUM([2]) * 100, NULL) AS Percentage2
+      ,ISNULL(SUM([3] * PercentageUsed) / SUM([3]) * 100, NULL) AS Percentage3
+      ,ISNULL(SUM([4] * PercentageUsed) / SUM([4]) * 100, NULL) AS Percentage4
+      ,ISNULL(SUM([5] * PercentageUsed) / SUM([5]) * 100, NULL) AS Percentage5
+      ,ISNULL(SUM([6] * PercentageUsed) / SUM([6]) * 100, NULL) AS Percentage6
+      ,ISNULL(SUM([7] * PercentageUsed) / SUM([7]) * 100, NULL) AS Percentage7
+      ,ISNULL(SUM([8] * PercentageUsed) / SUM([8]) * 100, NULL) AS Percentage8
+      ,ISNULL(SUM([9] * PercentageUsed) / SUM([9]) * 100, NULL) AS Percentage9
+      ,ISNULL(SUM([10] * PercentageUsed) / SUM([10]) * 100, NULL) AS Percentage10
+      ,ISNULL(SUM([11] * PercentageUsed) / SUM([11]) * 100, NULL) AS Percentage11
+      ,ISNULL(SUM([12] * PercentageUsed) / SUM([12]) * 100, NULL) AS Percentage12
+    FROM @ChartTmp2
+    WHERE 1=1 --#user#`;
+    
   var date = new Date();
   var year = date.getFullYear();
   queryString = queryString.replace("--#year#", "AND ProjYear = " + year.toString());
 
-  //console.log(queryString);
+  //Initially get compnay information
   // query to the database and get the records
   request.query(queryString, function (err, recordset) {
     if (err) {
@@ -358,18 +360,47 @@ router.post('/initializeActualQuotedData', (req, res) => {
     } else {
       console.log("actualvsquoted worked");
     }
-      var i = 0;
       recordset.recordsets[0].forEach(function (item) {
         let data = new ActualQuotedData();
-        data.id = i++;
+        data.id = 0;
+        data.name = "Company";
         data.percentages = Object.values(item);
 
-        // data.jan = item.Years;
-        // data.revenue = item.Revenue;
         data.save();
       })
       if (err) console.log(err);
   });
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+
+  const length = designers.name.length;
+  for(let i = 0 + 1; i < length + 1; i++) {
+    const id = designers.id[i];
+    const name = designers.name[i];
+
+    queryStringUser = queryString.replace("--#user#", "AND PrimaryManager = '" + id + "'");
+
+    // query to the database and get the records
+    request.query(queryStringUser, function (err, recordset) {
+      if (err) {
+        console.log(err);
+        return;
+      } else {
+        console.log("actualvsquoted worked");
+      }
+        recordset.recordsets[0].forEach(function (item) {
+          let data = new ActualQuotedData();
+          data.id = i;
+          data.name = name;
+          data.percentages = Object.values(item);
+
+          // data.jan = item.Years;
+          // data.revenue = item.Revenue;
+          data.save();
+        })
+        if (err) console.log(err);
+    });
+  }
+  
 
   //return res.json({ success: true});
 

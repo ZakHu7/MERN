@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import MultiSelect from './inputs/MultiSelect';
+
 
 
 import EmployeeChart from './charts/EmployeeChart';
@@ -21,6 +23,7 @@ import NivoLineChart from './charts/NivoLineChart';
 
 
 import GoogleMap from './googleMap';
+import './CompanyData.css';
 
 
 const API = 'http://192.168.23.114:3001/api';
@@ -32,6 +35,12 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         padding: theme.spacing(2),
+        margin: 10,
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+    paperSmall: {
+        //padding: theme.spacing(2),
         margin: 10,
         textAlign: 'center',
         color: theme.palette.text.secondary,
@@ -81,7 +90,14 @@ export default function CompanyData() {
     const [mapData, setMapData] = React.useState([]);
     const [latLngData, setLatLngData] = React.useState([]);
 
-    
+    // Used for the Actual vs Quoted chart where custom lines can be made
+    const [designersData, setDesignersData] = React.useState({id:[], name:[]});
+    //const [designersID, setDesignersID] = React.useState([]);
+    const [customLine1, setCustomLine1] = React.useState([]);
+    const [customLine2, setCustomLine2] = React.useState([]);
+    const [customLine3, setCustomLine3] = React.useState([]);
+    const [customLine4, setCustomLine4] = React.useState([]);
+    const [customLine5, setCustomLine5] = React.useState([]);
     useEffect(() => {
         getDataFromDb();
         setLoadingData(false);
@@ -114,7 +130,9 @@ export default function CompanyData() {
         });
 
         axios.post(API + '/initializeActualQuotedData', {
-        id: 0,
+            id: 0,
+            designers: designersData,
+            //user: "company",
         });
         axios.post(API + '/initializeBillableData', {
             id: 0,
@@ -147,7 +165,7 @@ export default function CompanyData() {
 
         const empRes = await axios.get(API + '/getEmployeeData');
         //alert(JSON.stringify(empRes.data.data));
-        handleEmployeeDataChange(empRes.data.data);
+        createEmployeeData(empRes.data.data);
 
 
         const annRevRes = await axios.get(API + '/getAnnualRevenueData');
@@ -234,14 +252,11 @@ export default function CompanyData() {
         }
     }
 
-    // function handleStateChange(setState, value) {
-    //     //alert(Array.isArray(value));
-    //     setState(value);
-    // }
-
-    function handleEmployeeDataChange(value) {
+    function createEmployeeData(value) {
 
         var employeeArr = [];
+        const designerArr = [];
+        const designerIDArr = [];
 
         var size = value.length;
         var employeePieData = {};
@@ -264,19 +279,35 @@ export default function CompanyData() {
                 billable: [],
                 notBillable: [],
             });
+
+            //For a list of designers
+            if (category == "Designer") {
+                designerArr.push(employee.name);
+                designerIDArr.push(employee.employeeID)
+            }
         }
+
+
         setEmployeeData(employeeArr);
 
         setEmployeeChartData(employeePieData);
+
+
+        const designersInfo = {
+            id: designerIDArr,
+            name: designerArr,
+        }
+
+        setDesignersData(designersInfo);
     }
 
 
     return (
         <div className={classes.root}>
-             <Grid container spacing={2}>
+             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        {/* {JSON.stringify(mapData)} */}
+                        {/* {JSON.stringify(actualQuotedData)} */}
                         <GoogleMap 
                             data = {latLngData}
                             //wait = {5000}
@@ -288,20 +319,62 @@ export default function CompanyData() {
                         >
                             Get Map Data
                         </Button>
-                        {/* {JSON.stringify(mapData)} */}
+
                     </Paper>
                 </Grid>
             </Grid>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
+
+            <Grid container spacing={0}>
+                <Grid item xs={11}>
                     <Paper className={[classes.paper, classes.height].join(" ")}>
                         <NivoLineChart 
                             data={actualQuotedData}
+                            customLine1={customLine1}
+                            customLine2={customLine2}
+                            customLine3={customLine3}
+                            customLine4={customLine4}
+                            customLine5={customLine5}
+
                             //foo = {console.log(actualQuotedData)}
                         />
                     </Paper>
                 </Grid>
+                <Grid item xs={1}>
+                    <Paper className={[classes.paperSmall, classes.height].join(" ")}>
+                        <MultiSelect 
+                            title={"Custom Line 1"}
+                            items={designersData.name}
+                            value={customLine1}
+                            onChange={(employees) => setCustomLine1(employees)}
+                        />
+                        <MultiSelect 
+                            title={"Custom Line 2"}
+                            items={designersData.name}
+                            value={customLine2}
+                            onChange={(employees) => setCustomLine2(employees)}
+                        />
+                        <MultiSelect 
+                            title={"Custom Line 3"}
+                            items={designersData.name}
+                            value={customLine3}
+                            onChange={(employees) => setCustomLine3(employees)}
+                        />
+                        <MultiSelect 
+                            title={"Custom Line 4"}
+                            items={designersData.name}
+                            value={customLine4}
+                            onChange={(employees) => setCustomLine4(employees)}
+                        />
+                        <MultiSelect 
+                            title={"Custom Line 5"}
+                            items={designersData.name}
+                            value={customLine5}
+                            onChange={(employees) => setCustomLine5(employees)}
+                        />
+                    </Paper>
+                </Grid>
             </Grid>
+
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>

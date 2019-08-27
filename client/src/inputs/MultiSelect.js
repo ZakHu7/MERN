@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    maxWidth: 300,
+    maxWidth: 120,
   },
   chips: {
     display: 'flex',
@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
   noLabel: {
     marginTop: theme.spacing(3),
   },
+
 }));
 
 const ITEM_HEIGHT = 48;
@@ -59,20 +60,8 @@ export default function MultipleSelect(props) {
   //const [personName, setPersonName] = React.useState([]);
 
   function handleChange(event) {
-    //setPersonName(event.target.value);
     props.onChange(event.target.value);
   }
-
-//   function handleChangeMultiple(event) {
-//     const { options } = event.target;
-//     const value = [];
-//     for (let i = 0, l = options.length; i < l; i += 1) {
-//       if (options[i].selected) {
-//         value.push(options[i].value);
-//       }
-//     }
-//     setPersonName(value);
-//   }
 
   return (
     <div className={classes.root}>
