@@ -37,6 +37,7 @@ export default function Chart2(props) {
         animationEnabled: true,
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
+        height: 380,
         title:{
             text: "Dollar per Square Foot to Hours",
             fontFamily: "roboto",

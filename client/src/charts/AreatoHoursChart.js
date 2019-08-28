@@ -36,6 +36,7 @@ export default function Chart(props) {
         animationEnabled: true,
         exportEnabled: true,
         theme: "light2", // "light1", "dark1", "dark2"
+        height: 380,
         title:{
             text: "Area to Hours",
             fontFamily: "roboto",
