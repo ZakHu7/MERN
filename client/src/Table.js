@@ -68,7 +68,7 @@ const headRows = [
 //   { id: 'id', numeric: true, disablePadding: true, label: 'Client ID' },
   { id: 'projectID', numeric: false, disablePadding: true, label: 'Project ID' },
   { id: 'name', numeric: false, disablePadding: false, label: 'Project Name' },
-  { id: 'hours', numeric: true, disablePadding: false, label: 'Hours' },
+  { id: 'hours', numeric: true, disablePadding: false, label: 'Hours Spent' },
   { id: 'buildingType', numeric: false, disablePadding: false, label: 'Building Type' },
   { id: 'area', numeric: false, disablePadding: false, label: 'Area' },
 
@@ -170,7 +170,7 @@ const EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Table
+            Project Info
           </Typography>
         )}
       </div>

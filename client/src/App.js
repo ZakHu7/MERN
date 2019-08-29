@@ -27,7 +27,7 @@ const theme = createMuiTheme({
 })
   
 
-// import logo from './RombaldLogo.png';
+//All of the routing is done here. Right now, it only consists of two main pages, Home and Company Data
 
 function App() {
     return (

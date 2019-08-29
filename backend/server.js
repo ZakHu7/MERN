@@ -1,3 +1,7 @@
+//This contains all of the backend code. 
+//It connects to both the Microsoft Sql Server and the Mongo DB
+//It also takes care of all the requests from the frontend
+
 const mongoose = require('mongoose');
 const express = require('express');
 var cors = require('cors');
@@ -46,8 +50,10 @@ app.use(logger('dev'));
 /// Get the data for the main page.
 /// Initialize means to get the data from the local database and pushing it to MongoDB Atlas
 router.post('/initializeData', (req, res) => {
+    //Get rid of everything in the Mongo DB collection so we can populate it with updated info
     db.db.dropCollection('datas', function(err, result) {if (err) console.log('could not delete collection')});
 
+    //connect to Microsoft Sql Server
     var request = new mssql.Request();
     
     // query to the database and get the records
@@ -66,7 +72,7 @@ router.post('/initializeData', (req, res) => {
 
           //console.log(item.Area1);
           //console.log(data.quotedAmt);
-
+          //Save everything as a Data object. This is defined as a schema in data.js
           data.save();
         })
         if (err) console.log(err);
@@ -85,6 +91,7 @@ router.get('/getData', (req, res) => {
   const searchQuery = makeQueries.getSearch(req.query.search);
   const [areaMin, areaMax] = makeQueries.getArea(req.query.area);
   
+  //Query for the filters
   const query = {
     $and: [
       {hours: { $gt: sizeMin, $lt: sizeMax }},
@@ -93,14 +100,11 @@ router.get('/getData', (req, res) => {
         [{area: { $gt: areaMin, $lt: areaMax }}, {area: null}]
       },
 
-      //{id: {$exists: true}},
       {$or: buildingTypeQuery},
       {$or: searchQuery},
     ]
-    //$or: [ { buildingType: / /} ]
   };
   
-  const { id, update } = req.body;
   //console.log(req);
   //console.log(req.query.projectSize);
   Data.find(query, (err, data) => {

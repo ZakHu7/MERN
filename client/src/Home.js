@@ -1,3 +1,5 @@
+//The main page.
+
 import React from 'react';
 
 import Controller from './Controller';
@@ -37,6 +39,7 @@ function createQueryFilters(search, projectSize, buildingTypes, area) {
     return { search, projectSize, buildingTypes, area };
 }
 
+//The slider has a logarithmic scale with this function
 function convertArea(x) {
 
     var minp = 0;

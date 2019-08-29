@@ -1,3 +1,5 @@
+//The secondary page. Contains all of the data for the page
+
 import React, { useEffect } from 'react';
 
 import axios from 'axios';
