@@ -17,6 +17,8 @@ const HitRateRevData = require('./hitRateRevData');
 const MapData = require('./mapData');
 const LatLngData = require('./latLngData');
 
+const GeneralProjectData = require('./generalProjectData');
+
 //const API_PORT = process.env.PORT || 3001;
 const API_PORT = 3001;
 
@@ -149,6 +151,53 @@ router.post('/putData', (req, res) => {
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
+  });
+});
+router.get('/getProjectGeneralData', (req, res) => {
+  
+  const query = {};
+  //const { id, update } = req.body;
+  const { id, update } = req.body;
+  GeneralProjectData.find(query, (err, data)=>{
+    if(err)
+      return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  }).sort( { id: 1 } );
+
+});
+
+router.post('/initializeProjectGeneralData', (req, res) => {
+  db.db.dropCollection('generalprojectdatas', function(err, result) {if (err) console.log('could not delete collection')});
+
+  var request = new mssql.Request();
+  var queryString = `
+  SELECT ProjectStatus, COUNT(ProjectStatus)AS NumOccurences
+  FROM Project WHERE ProjectStatus != 'Cancelled'
+  GROUP BY ProjectStatus;
+  `;
+
+  // query to the database and get the records
+  request.query(queryString, function (err, recordset) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      console.log("project data worked");
+    }
+
+      var i = 0;
+      
+      recordset.recordsets[0].forEach(function (item) {
+        let data = new GeneralProjectData();
+        data.status = item.ProjectStatus;
+        data.numOccurences = item.NumOccurences;
+        data.id= i;
+        //console.log()
+        data.save();
+        i++;
+        
+      })
+      if (err) console.log(err);
   });
 });
 

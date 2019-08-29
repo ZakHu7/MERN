@@ -20,13 +20,14 @@ import HitRateChart from './charts/HitRateChart';
 import ForecastChart from './charts/ForecastChart';
 
 import NivoLineChart from './charts/NivoLineChart';
+import GeneralProjectInfo from './charts/ProjectGeneralInfo';
 
 
 import GoogleMap from './googleMap';
 import './CompanyData.css';
 
 
-const API = 'http://192.168.23.114:3001/api';
+const API = 'http://localhost:3001/api';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -90,6 +91,8 @@ export default function CompanyData() {
     const [mapData, setMapData] = React.useState([]);
     const [latLngData, setLatLngData] = React.useState([]);
 
+    const [generalProjInfo, setGeneralProjInfo] = React.useState({});
+
     // Used for the Actual vs Quoted chart where custom lines can be made
     const [designersData, setDesignersData] = React.useState({id:[], name:[]});
     //const [designersID, setDesignersID] = React.useState([]);
@@ -148,7 +151,9 @@ export default function CompanyData() {
         axios.post(API + '/initializeMapData', {
             id: 0,
         });
-
+        axios.post(API + '/initializeProjectGeneralData', {
+            id: 0,
+        });
         //await alert('hi');
     }
     
@@ -180,12 +185,19 @@ export default function CompanyData() {
         const hitRateRevRes = await axios.get(API + '/getHitRateRevData');
         setHitRateRevData(hitRateRevRes.data.data);
 
-
+        const generalProjectRes = await axios.get(API + '/getProjectGeneralData');
+        setGeneralProjInfo(generalProjectRes.data.data);
+        
         const latLngRes = await axios.get(API + '/getLatLngData');
         createLatLngData(latLngRes.data.data);
     };
     
-
+    function getProjectData(){
+        axios.post(API + '/initializeProjectGeneralData', {
+            id: 0,
+        });
+        
+    }
 
     function createLatLngData(data) {
         var points = [];
@@ -446,6 +458,24 @@ export default function CompanyData() {
                         />
                     </Paper>
                 </Grid>
+            </Grid>
+            <Grid container spacing = {10}>
+                <Grid item xs = {15}>
+                    <Paper className = {classes.paper}>
+                        
+                    <GeneralProjectInfo 
+                        projectsInfo = {generalProjInfo}
+                        
+                        />
+                        <Button
+                         className={classes.button3}
+                         variant="contained"
+                         onClick={() => getProjectData()}>
+                             Refresh Projects Data
+                         </Button>
+                    </Paper>
+                </Grid>
+
             </Grid>
             
             {/* {JSON.stringify(employeeData)} */}
