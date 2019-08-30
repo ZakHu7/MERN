@@ -12,6 +12,7 @@ import './Controller.css';
 //const API_PORT = process.env.PORT || 'localhost:3001';
 
 const API = 'http://192.168.23.114:3001/api';
+// const API = 'http://localhost:3001/api';
 
 class Controller extends Component {
   // initialize our state
@@ -77,7 +78,7 @@ class Controller extends Component {
       ++idToBeAdded;
     }
 
-    axios.post('http://192.168.23.114:3001/api/putData', {
+    axios.post(API + '/putData', {
       id: idToBeAdded,
       name: name,
     });
@@ -97,7 +98,7 @@ class Controller extends Component {
       }
     });
 
-    axios.delete('http://192.168.23.114:3001/api/deleteData', {
+    axios.delete(API + '/deleteData', {
       data: {
         id: objIdToDelete,
       },
@@ -116,7 +117,7 @@ class Controller extends Component {
       }
     });
 
-    axios.post('http://192.168.23.114:3001/api/updateData', {
+    axios.post(API + '/updateData', {
       id: objIdToUpdate,
       update: { name: updateToApply },
     });
@@ -134,7 +135,7 @@ class Controller extends Component {
       ++idToBeAdded;
     }
 
-    axios.post('http://192.168.23.114:3001/api/initializeData', {
+    axios.post(API + '/initializeData', {
       id: idToBeAdded,
       name: "test",
     });

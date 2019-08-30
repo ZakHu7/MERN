@@ -29,6 +29,7 @@ import './CompanyData.css';
 
 
 const API = 'http://192.168.23.114:3001/api';
+// const API = 'http://localhost:3001/api';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -387,6 +388,7 @@ export default function CompanyData() {
                         >
                             REFRESH DATA
                         </Button>
+                        {/* <div>{JSON.stringify(loadingData)}</div> */}
                     </Paper>
                 </Grid>
             </Grid>

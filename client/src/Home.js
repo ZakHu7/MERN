@@ -14,7 +14,7 @@ import Filters from './Filters';
 import AreatoHoursChart from './charts/AreatoHoursChart';
 import DollarsPerSquareFootChart from './charts/DollarsPerSquareFootChart';
 
-
+//css
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -31,10 +31,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+// Generic function to change state
 function createFilterInfo(value, setState) {
     return { value, setState };
 }
 
+// Creats an "Object" with these fields
 function createQueryFilters(search, projectSize, buildingTypes, area) {
     return { search, projectSize, buildingTypes, area };
 }
